@@ -26,7 +26,8 @@ public class EnemyMovement : EnemyAbstract
     protected void LoadHomePoint()
     {
         if (this.homePoint != null) return;
-        this.homePoint = GameObject.Find("HomePoint").transform;
+        GameObject homePointObject = GameObject.Find("HomePoint");
+        if (homePointObject != null) this.homePoint = homePointObject.transform;
     }
     protected void FixedUpdate()
     {
@@ -34,6 +35,8 @@ public class EnemyMovement : EnemyAbstract
     }
     protected void PlayMoving()
     {
+        if (this.enemyCtrl == null || this.enemyCtrl.EnemyDamReceive == null || this.enemyCtrl.EnemyFollow == null ||
+            this.enemyCtrl.EnemyDetect == null || this.enemyCtrl.Rigid == null) return;
         if (this.enemyCtrl.EnemyDamReceive.IsDead) return;
         if (this.enemyCtrl.EnemyDamReceive.IsHurt) return;
         if (this.enemyCtrl.EnemyFollow.AlwaysFollowPlayer) return;
@@ -47,6 +50,7 @@ public class EnemyMovement : EnemyAbstract
     }
     protected void Moving()
     {
+        if (this.enemyCtrl == null || this.enemyCtrl.Rigid == null || transform.parent == null) return;
         this.isMoving = true;
         this.enemyCtrl.Rigid.MovePosition(Vector2.MoveTowards
         (transform.parent.position, this.wayPoint, this.GetCurrentSpeed() * Time.fixedDeltaTime));
@@ -54,6 +58,7 @@ public class EnemyMovement : EnemyAbstract
     
     protected void StopMoving()
     {
+        if (transform.parent == null) return;
         this.distance = Vector2.Distance(transform.parent.position, this.wayPoint);
         if (this.distance < 0.5f)
         {
@@ -66,6 +71,7 @@ public class EnemyMovement : EnemyAbstract
     }
     public void SetNewDestination()
     {
+        if (this.homePoint == null) return;
         Vector2 homePosition = (Vector2)homePoint.position;
         this.wayPoint = homePosition + new Vector2(
             Random.Range(this.distanceMinX, this.distanceMaxX),

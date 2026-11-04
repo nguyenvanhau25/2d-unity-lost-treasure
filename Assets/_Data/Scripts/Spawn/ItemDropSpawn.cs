@@ -16,6 +16,7 @@ public class ItemDropSpawn : Spawner
 
     public void Drop(List<DropRate> dropList, Vector3 dropPos, Quaternion dropRot)
     {
+        if (dropList == null || dropList.Count == 0 || dropList[0].itemSO == null) return;
         ItemCode itemCode = dropList[0].itemSO.itemCode;
         
         Transform itemDrop = this.Spawn(itemCode.ToString(), dropPos, dropRot);

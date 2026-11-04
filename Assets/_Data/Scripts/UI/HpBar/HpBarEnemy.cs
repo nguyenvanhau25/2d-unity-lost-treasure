@@ -21,16 +21,18 @@ public class HpBarEnemy : HpBar
     protected void LoadSpawner()
     {
         if (this.spawner != null) return;
-        this.spawner = GameObject.Find("HpBarEnemySpawn").GetComponent<Spawner>();
+        GameObject spawnerObject = GameObject.Find("HpBarEnemySpawn");
+        if (spawnerObject != null) this.spawner = spawnerObject.GetComponent<Spawner>();
     }
     protected override void HpShowing()
     {
         if (this.enemyCtrl == null) return;
 
+        if (this.enemyCtrl.EnemyDamReceive == null) return;
         bool isDead = this.enemyCtrl.EnemyDamReceive.IsDeaded();
         if (isDead)
         {
-            this.spawner.Despawn(transform);
+            if (this.spawner != null) this.spawner.Despawn(transform);
             return;
         }
 
@@ -46,6 +48,6 @@ public class HpBarEnemy : HpBar
     }
     public void SetFollowTarget(Transform target)
     {
-        this.followTarget.SetTarget(target);
+        if (this.followTarget != null) this.followTarget.SetTarget(target);
     }
 }

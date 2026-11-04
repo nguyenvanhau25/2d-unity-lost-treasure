@@ -19,13 +19,11 @@ public class EnemyDamReceive : DamageReceiver
     {
         if (this.enemyCtrl != null) return;
         this.enemyCtrl = GetComponentInParent<EnemyCtrl>();
-        Debug.Log(transform.name + ": LoadEnemyCtrl", gameObject);
     }
     protected void LoadCollide()
     {
         if (this.collide != null) return;
         this.collide = GetComponent<CapsuleCollider2D>();
-        Debug.Log(transform.name + ": LoadCollide", gameObject);
     }
     protected override void ResetValue()
     {
@@ -35,20 +33,23 @@ public class EnemyDamReceive : DamageReceiver
     protected override void Reborn()
     {
         this.hurtTime = this.enemyHurtTime;
-        this.hpMax = this.enemyCtrl.EnemySO.hpMax;
-        this.collide.enabled = true;
+        if (this.enemyCtrl != null && this.enemyCtrl.EnemySO != null)
+            this.hpMax = this.enemyCtrl.EnemySO.hpMax;
+        if (this.collide != null) this.collide.enabled = true;
         this.SetPosDead();
         base.Reborn();
     }
     protected override void OnDead()
     {
         this.Died?.Invoke(this);
-        this.collide.enabled = false;
-        this.enemyCtrl.Rigid.constraints = RigidbodyConstraints2D.FreezeAll;
+        if (this.collide != null) this.collide.enabled = false;
+        if (this.enemyCtrl != null && this.enemyCtrl.Rigid != null)
+            this.enemyCtrl.Rigid.constraints = RigidbodyConstraints2D.FreezeAll;
         this.OnDeadDrop();
     }
     protected void OnDeadDrop()
     {
+        if (this.enemyCtrl == null || this.enemyCtrl.EnemySO == null || ItemDropSpawn.Instance == null) return;
         Vector3 dropPos = transform.position;
         Quaternion dropRot = transform.rotation;
         ItemDropSpawn.Instance.Drop(this.enemyCtrl.EnemySO.dropList, dropPos, dropRot);
@@ -60,16 +61,23 @@ public class EnemyDamReceive : DamageReceiver
     }
     protected override void Hurt()
     {
-        this.enemyCtrl.Rigid.constraints = RigidbodyConstraints2D.FreezeAll;
+        if (this.enemyCtrl != null && this.enemyCtrl.Rigid != null)
+            this.enemyCtrl.Rigid.constraints = RigidbodyConstraints2D.FreezeAll;
     }
     protected virtual void SetPosDead()
     {
+        if (this.enemyCtrl == null || this.enemyCtrl.Rigid == null) return;
         this.enemyCtrl.Rigid.constraints = RigidbodyConstraints2D.None;
         this.enemyCtrl.Rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
     protected void OnCollisionStay2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Enemy"))
-            this.enemyCtrl.EnemyMovement.SetNewDestination();
+        if (other == null || !other.gameObject.CompareTag("Enemy") || this.enemyCtrl == null) return;
+
+        // BossCtrl inherits EnemyCtrl but uses BossMovement, not EnemyMovement.
+        // Regular enemies keep their old behaviour; bosses simply ignore this
+        // random-walk redirection when they touch another enemy.
+        EnemyMovement enemyMovement = this.enemyCtrl.EnemyMovement;
+        if (enemyMovement != null) enemyMovement.SetNewDestination();
     }
 }

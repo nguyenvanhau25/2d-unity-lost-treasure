@@ -27,13 +27,14 @@ public class ItemLooter : DinoBehaviourScript
     }
     protected void OnTriggerEnter2D(Collider2D other)
     {
+        if (this.inventory == null) return;
         ItemPickupable itemPickupable = other.GetComponent<ItemPickupable>();
         if (itemPickupable == null) return;
         ItemCode itemCode = itemPickupable.GetItemCode();
         if (this.inventory.PickupItem(itemCode, 1))
         {
             itemPickupable.Picked();
-            AudioManagerr.Instance.PlaySFX("Pickup");
+            if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("Pickup");
         }
     }
 }

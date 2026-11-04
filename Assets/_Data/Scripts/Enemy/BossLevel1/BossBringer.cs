@@ -64,7 +64,7 @@ public class BossBringer : DamageReceiver
         this.enemySpawnPos = this.enemySpawnPos != null ? this.enemySpawnPos : transform.Find("SpawnPos");
         this.patrolCenter = transform.position;
         this.patrolTarget = this.GetNextPatrolTarget();
-        healEffect.SetActive(false);
+        if (healEffect != null) healEffect.SetActive(false);
     }
 
     protected override void OnEnable()
@@ -251,7 +251,7 @@ public class BossBringer : DamageReceiver
         if (this.nextSpecial == 0)
         {
             // this.PlayAnimation("Cast");
-            AudioManagerr.Instance.PlaySFX("SpellBossBringer");
+            if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("SpellBossBringer");
             animator.SetTrigger("Cast");
             Invoke("HeafEffectActive", 0.4f);
             Invoke("HeafEffectUnActive", 1f);
@@ -278,11 +278,11 @@ public class BossBringer : DamageReceiver
 
     private void HeafEffectUnActive()
     {
-        healEffect.SetActive(false);
+        if (healEffect != null) healEffect.SetActive(false);
     }
     private void HeafEffectActive()
     {
-        healEffect.SetActive(true);
+        if (healEffect != null) healEffect.SetActive(true);
     }
 
 
@@ -326,7 +326,7 @@ public class BossBringer : DamageReceiver
             Destroy(bullet);
             return;
         }
-        AudioManagerr.Instance.PlaySFX("BossBringerShoot");
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("BossBringerShoot");
         projectile.Launch(this.target.position - this.firePos.position, this.bulletSpeed, this.bulletDamage);
     }
 

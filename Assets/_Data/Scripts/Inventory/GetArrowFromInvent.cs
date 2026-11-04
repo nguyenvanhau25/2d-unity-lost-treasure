@@ -10,8 +10,8 @@ public class GetArrowFromInvent : GetItemFromInvent
         {
             if (item.itemProfile.itemCode != ItemCode.Arrow || item.itemCount <= 0) continue;
             item.itemCount--;
-            ArrowPlayerSpawn.Instance.AddArrow(1);
+            if (ArrowPlayerSpawn.Instance != null) ArrowPlayerSpawn.Instance.AddArrow(1);
         }
     }
 }
- 
+

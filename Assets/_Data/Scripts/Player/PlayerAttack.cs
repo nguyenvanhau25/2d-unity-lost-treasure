@@ -18,6 +18,8 @@ public class PlayerAttack : PlayerAbstract
 
     protected void GetInputAttack()
     {
+        if (this.playerCtrl == null || this.playerCtrl.PlayerDamReceive == null || this.playerCtrl.PlayerMovement == null || InputManager.Instance == null)
+            return;
         if (this.playerCtrl.PlayerDamReceive.IsDead) return;
         if (this.playerCtrl.PlayerDamReceive.IsHurt) return;
         if (this.playerCtrl.PlayerMovement.SwitchWeapon) return;
@@ -29,10 +31,10 @@ public class PlayerAttack : PlayerAbstract
         if (!this.attack) return;
         this.attackTimeCounter += Time.deltaTime;
         if (this.attackTimeCounter < this.attackTime) return;
-        AudioManagerr.Instance.PlaySFX("Sword");
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("Sword");
         this.attackTimeCounter = 0f;
 
         this.attack = false;
-        InputManager.Instance.SetAttack(false);
+        if (InputManager.Instance != null) InputManager.Instance.SetAttack(false);
     }
 }

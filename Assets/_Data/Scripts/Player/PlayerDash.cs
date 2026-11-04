@@ -30,12 +30,13 @@ public class PlayerDash : PlayerAbstract
     }
     protected void GetInput()
     {
+        if (this.playerCtrl == null || this.playerCtrl.PlayerDamReceive == null || InputManager.Instance == null) return;
         if (this.playerCtrl.PlayerDamReceive.IsDead) return;
         this.dash = InputManager.Instance.InputDash;
     }
     protected void Dashing()
     {
-        if (!this.dash && this.canDash)
+        if (!this.dash && this.canDash && this.playerCtrl != null && this.playerCtrl.PlayerMovement != null && this.playerCtrl.PlayerMovement._Rb != null)
         {
             StartCoroutine(Dash());
         }
@@ -47,16 +48,16 @@ public class PlayerDash : PlayerAbstract
 
         Vector2 dashDirection =new Vector2(this.playerCtrl.PlayerMovement.Horizontal, this.playerCtrl.PlayerMovement.Vertical).normalized;
         this.playerCtrl.PlayerMovement._Rb.linearVelocity = dashDirection * dashingPower;
-        this.trailRenderer.emitting = true;
-        AudioManagerr.Instance.PlaySFX("Dash");
+        if (this.trailRenderer != null) this.trailRenderer.emitting = true;
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("Dash");
 
         yield return new WaitForSeconds(dashingTime);
-        this.trailRenderer.emitting = false;
+        if (this.trailRenderer != null) this.trailRenderer.emitting = false;
         this.isDashing = false;
 
         yield return new WaitForSeconds(dashingCooldown);
         this.dash = true;
         this.canDash = true;
-        InputManager.Instance.SetDash(true);
+        if (InputManager.Instance != null) InputManager.Instance.SetDash(true);
     }
 }

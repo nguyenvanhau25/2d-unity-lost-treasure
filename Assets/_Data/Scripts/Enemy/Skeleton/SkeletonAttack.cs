@@ -17,6 +17,8 @@ public class SkeletonAttack : EnemyAttack
     }
     protected override void Attacking()
     {
+        if (this.enemyCtrl == null || this.enemyCtrl.EnemyFollow == null || this.enemyCtrl.EnemyFollow.Target == null)
+            return;
         if (this.enemyCtrl.EnemyFollow.Target.position.y > transform.position.y + 0.5f ||
          this.enemyCtrl.EnemyFollow.Target.position.y < transform.position.y - 0.5f)
             return;
@@ -24,11 +26,13 @@ public class SkeletonAttack : EnemyAttack
     }
     protected override void Attack()
     {
+        if (ArrowEnemySpawn.Instance == null || transform.parent == null) return;
         Vector3 spawPos = transform.parent.position;
         Quaternion spawRot = transform.parent.rotation;
         Transform new_Arrow = ArrowEnemySpawn.Instance.Spawn(this.GetArrowName(), spawPos, spawRot);
+        if (new_Arrow == null) return;
 
-        AudioManagerr.Instance.PlaySFX("Arrow");
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("Arrow");
 
         this.SetRotationArrow(new_Arrow);
         base.Attack();
@@ -39,6 +43,7 @@ public class SkeletonAttack : EnemyAttack
     }
     protected void SetRotationArrow(Transform new_Arrow)
     {
+        if (new_Arrow == null || transform.parent == null) return;
         if (transform.parent.localScale.x == -1) new_Arrow.rotation = Quaternion.Euler(0, 0, 180);
     }
 }

@@ -18,10 +18,10 @@ public class MoveCam2War : DinoBehaviourScript
     }
     protected void Update()
     {
-        if (!BossCtrl.Instance.BossMovement.CanMove()) return;
-        this.mainCam.orthographicSize = 10;
-        this.followPlayer.enabled = false;
-        this.followTarget.enabled = true;
+        if (BossCtrl.Instance == null || BossCtrl.Instance.BossMovement == null || !BossCtrl.Instance.BossMovement.CanMove()) return;
+        if (this.mainCam != null) this.mainCam.orthographicSize = 10;
+        if (this.followPlayer != null) this.followPlayer.enabled = false;
+        if (this.followTarget != null) this.followTarget.enabled = true;
 
     }
     protected void LoadCamera()
@@ -32,13 +32,15 @@ public class MoveCam2War : DinoBehaviourScript
     protected void LoadFollowPlayer()
     {
         if (this.followPlayer != null) return;
-        this.followPlayer = GameObject.Find("HoldCamera").transform.GetComponent<FollowPlayer>();
+        GameObject cameraHolder = GameObject.Find("HoldCamera");
+        if (cameraHolder != null) this.followPlayer = cameraHolder.GetComponent<FollowPlayer>();
     }
 
     protected void LoadFollowTarget()
     {
         if (this.followTarget != null) return;
-        this.followTarget = GameObject.Find("HoldCamera").transform.GetComponent<FollowTarget>();
+        GameObject cameraHolder = GameObject.Find("HoldCamera");
+        if (cameraHolder != null) this.followTarget = cameraHolder.GetComponent<FollowTarget>();
     }
 
 

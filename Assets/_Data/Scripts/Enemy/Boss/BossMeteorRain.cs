@@ -7,10 +7,27 @@ using UnityEngine;
 /// </summary>
 public class BossMeteorRain : MonoBehaviour
 {
+    private enum MeteorTargetPattern
+    {
+        DangerZoneRandom,
+        PlayerCurrentPosition,
+        PlayerStartRing
+    }
+
     [Header("References")]
     [SerializeField] private BossAttack2 bossAttack2;
     [SerializeField] private PolygonCollider2D dangerZone;
     [SerializeField] private BossFallingMeteor[] meteorPool;
+
+    [Header("Targeting")]
+    [Tooltip("Danger Zone preserves LastWar. Player Start Ring locks the player's position at the start of the attack, then distributes meteors around a circle.")]
+    [SerializeField] private MeteorTargetPattern targetPattern = MeteorTargetPattern.DangerZoneRandom;
+    [SerializeField] private Transform playerTarget;
+
+    [Header("Player Start Ring")]
+    [SerializeField, Min(0f)] private float playerRingRadius = 2.75f;
+    [SerializeField, Min(0f)] private float playerRingThickness = 0.35f;
+    [SerializeField, Min(1)] private int playerRingPointCount = 16;
 
     [Header("Meteor Rain")]
     [SerializeField] private float spawnInterval = 0.18f;
@@ -20,9 +37,20 @@ public class BossMeteorRain : MonoBehaviour
     private bool isRaining;
     private float nextSpawnTime;
     private int nextMeteorIndex;
+    private Vector2 playerPositionAtRainStart;
+    private float ringStartAngle;
+    private int nextRingPointIndex;
 
-    public void StartRain()
+    private void Awake()
     {
+        FindPlayerTarget();
+    }
+
+    public void StartRain(BossAttack2 attack2 = null)
+    {
+        if (attack2 != null) bossAttack2 = attack2;
+        FindPlayerTarget();
+        CaptureRainStartPosition();
         isRaining = true;
         nextSpawnTime = Time.time + 0.12f;
     }
@@ -61,7 +89,7 @@ public class BossMeteorRain : MonoBehaviour
         BossFallingMeteor meteor = GetAvailableMeteor();
         if (meteor == null) return;
 
-        meteor.Launch(GetPointInsideDangerZone());
+        meteor.Launch(GetMeteorTargetPosition());
     }
 
     private BossFallingMeteor GetAvailableMeteor()
@@ -81,6 +109,39 @@ public class BossMeteorRain : MonoBehaviour
         return null;
     }
 
+    private Vector2 GetMeteorTargetPosition()
+    {
+        switch (targetPattern)
+        {
+            case MeteorTargetPattern.PlayerCurrentPosition:
+                FindPlayerTarget();
+                return playerTarget != null ? playerTarget.position : transform.position;
+
+            case MeteorTargetPattern.PlayerStartRing:
+                return GetPointOnPlayerStartRing();
+        }
+
+        return GetPointInsideDangerZone();
+    }
+
+    private void CaptureRainStartPosition()
+    {
+        playerPositionAtRainStart = playerTarget != null ? playerTarget.position : transform.position;
+        ringStartAngle = Random.Range(0f, 360f);
+        nextRingPointIndex = 0;
+    }
+
+    private Vector2 GetPointOnPlayerStartRing()
+    {
+        int pointCount = Mathf.Max(1, playerRingPointCount);
+        float angle = ringStartAngle + 360f * (nextRingPointIndex % pointCount) / pointCount;
+        nextRingPointIndex++;
+
+        float radius = Mathf.Max(0f, playerRingRadius + Random.Range(-playerRingThickness, playerRingThickness));
+        Vector2 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+        return playerPositionAtRainStart + direction * radius;
+    }
+
     private Vector2 GetPointInsideDangerZone()
     {
         if (dangerZone == null) return transform.position;
@@ -98,6 +159,14 @@ public class BossMeteorRain : MonoBehaviour
         }
 
         return bounds.center;
+    }
+
+    private void FindPlayerTarget()
+    {
+        if (playerTarget != null) return;
+
+        PlayerCtrl player = FindAnyObjectByType<PlayerCtrl>();
+        if (player != null) playerTarget = player.transform;
     }
 
     private Bounds GetDangerZoneWorldBounds()

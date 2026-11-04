@@ -11,7 +11,7 @@ public class BtnStart : BaseButton
     {
         base.Start();
         StartCoroutine(this.StartMenuGame());
-        AudioManagerr.Instance.OpenMusic();
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.OpenMusic();
     }
     protected override void LoadComponent()
     {
@@ -21,7 +21,8 @@ public class BtnStart : BaseButton
     protected void LoadTransAnim()
     {
         if (this.transAnim != null) return;
-        this.transAnim = transform.parent.GetComponentInChildren<Animator>();
+        if (transform.parent != null)
+            this.transAnim = transform.parent.GetComponentInChildren<Animator>();
     }
     protected override void OnClick()
     {
@@ -33,14 +34,14 @@ public class BtnStart : BaseButton
     }
     IEnumerator LoadGame()
     {
-        this.canvas.enabled = true;
-        this.transAnim.SetTrigger("End");
+        if (this.canvas != null) this.canvas.enabled = true;
+        if (this.transAnim != null) this.transAnim.SetTrigger("End");
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene("ForestStartScene");
     }
     IEnumerator StartMenuGame()
     {
         yield return new WaitForSeconds(1);
-        this.canvas.enabled = false;
+        if (this.canvas != null) this.canvas.enabled = false;
     }
 }

@@ -20,7 +20,7 @@ public class ArrowPlayerSpawn : Spawner
     {
         base.LoadComponent();
         this.LoadArrowSO();
-        this.spawnCount = this.arrowSO.arrowCounts;
+        if (this.arrowSO != null) this.spawnCount = this.arrowSO.arrowCounts;
     }
     protected void LoadArrowSO()
     {

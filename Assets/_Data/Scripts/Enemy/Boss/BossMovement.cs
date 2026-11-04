@@ -17,12 +17,14 @@ public class BossMovement : DinoBehaviourScript
     protected void LoadTarget()
     {
         if (this.target != null) return;
-        this.target = GameObject.Find("Player").transform;
+        GameObject playerObject = GameObject.Find("Player");
+        if (playerObject != null) this.target = playerObject.transform;
     }
     protected void LoadBossAttack()
     {
         if (this.bossAttack != null) return;
-        this.bossAttack = transform.parent.GetComponentInChildren<BossAttack>();
+        if (transform.parent != null)
+            this.bossAttack = transform.parent.GetComponentInChildren<BossAttack>();
     }
     protected void Update()
     {
@@ -30,13 +32,14 @@ public class BossMovement : DinoBehaviourScript
     }
     public bool CanMove()
     {
+        if (this.target == null || transform.parent == null) return false;
         this.distance = Vector2.Distance(transform.parent.position, target.position);
         if (this.distance <= this.distanceToTarget) return true;
         return false;
     }
     protected void Move()
     {
-        if (!this.CanMove()) return;
+        if (!this.CanMove() || this.bossAttack == null) return;
         this.bossAttack.enabled = true;
     }
 }

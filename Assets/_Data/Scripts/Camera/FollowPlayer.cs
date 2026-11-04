@@ -27,7 +27,8 @@ public class FollowPlayer : DinoBehaviourScript
     protected void LoadPlayer()
     {
         if (this.player != null) return;
-        this.player = GameObject.Find("Player").transform;
+        GameObject playerObject = GameObject.Find("Player");
+        if (playerObject != null) this.player = playerObject.transform;
     }
     protected void Following()
     {

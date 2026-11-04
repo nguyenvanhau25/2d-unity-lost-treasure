@@ -19,6 +19,7 @@ public class PlayerShooting : PlayerAbstract
 
     protected void GetInputShoot()
     {
+        if (ArrowPlayerSpawn.Instance == null || this.playerCtrl == null || InputManager.Instance == null) return;
         if (ArrowPlayerSpawn.Instance.SpawnCount <= 0) return;
         if (this.playerCtrl.PlayerDamReceive.IsDead) return;
         if (this.playerCtrl.PlayerDamReceive.IsHurt) return;
@@ -37,15 +38,17 @@ public class PlayerShooting : PlayerAbstract
         this.Shooted();
 
         this.shoot = false;
-        InputManager.Instance.SetAttack(false);
+        if (InputManager.Instance != null) InputManager.Instance.SetAttack(false);
     }
     protected void Shooted()
     {
+        if (ArrowPlayerSpawn.Instance == null || transform.parent == null) return;
         Vector3 spawPos = transform.parent.position;
         Quaternion spawRot = transform.parent.rotation;
         Transform new_Arrow = ArrowPlayerSpawn.Instance.Spawn(this.GetArrowName(), spawPos, spawRot);
+        if (new_Arrow == null) return;
 
-        AudioManagerr.Instance.PlaySFX("Arrow");
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("Arrow");
 
         this.SetRotationArrow(new_Arrow);
     }
@@ -55,6 +58,7 @@ public class PlayerShooting : PlayerAbstract
     }
     protected void SetRotationArrow(Transform new_Arrow)
     {
+        if (new_Arrow == null || this.playerCtrl == null || this.playerCtrl.PlayerFlipDirect == null) return;
         if (this.playerCtrl.PlayerFlipDirect.Left) new_Arrow.rotation = Quaternion.Euler(0, 0, 180);
         if (this.playerCtrl.PlayerFlipDirect.Up) new_Arrow.rotation = Quaternion.Euler(0, 0, 90);
         if (this.playerCtrl.PlayerFlipDirect.Down) new_Arrow.rotation = Quaternion.Euler(0, 0, -90);

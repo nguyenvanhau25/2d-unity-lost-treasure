@@ -24,12 +24,13 @@ public class OrcAttack : EnemyAttack
     protected void LoadEnemyDamSender()
     {
         if (this.enemyDamSender != null) return;
-        this.enemyDamSender = transform.parent.Find("EnemyDamSender");
+        if (transform.parent != null)
+            this.enemyDamSender = transform.parent.Find("EnemyDamSender");
     }
     protected override void Attack()
     {
-        this.enemyDamSender.gameObject.SetActive(true);
-        AudioManagerr.Instance.PlaySFX("EnemyAttack");
+        if (this.enemyDamSender != null) this.enemyDamSender.gameObject.SetActive(true);
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("EnemyAttack");
         base.Attack();
     }
     protected override void StopAttack()
@@ -37,7 +38,7 @@ public class OrcAttack : EnemyAttack
         if (this.attackTimeCounter <= 0f && this.isAttack)
         {
             this.isAttack = false;
-            this.enemyDamSender.gameObject.SetActive(false);
+            if (this.enemyDamSender != null) this.enemyDamSender.gameObject.SetActive(false);
         }
     }
 }

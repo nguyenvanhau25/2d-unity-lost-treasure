@@ -12949,7 +12949,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCtrl: {fileID: 759984833}
   _rb: {fileID: 759984834}
-  speed: 6
+  speed: 10
   horizontal: 0
   vertical: 0
   switchWeapon: 1
@@ -13044,7 +13044,7 @@ Transform:
   m_GameObject: {fileID: 759984832}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5, y: -6.5, z: 0}
+  m_LocalPosition: {x: -28.4, y: -1.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13505,7 +13505,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &793610475
 Transform:
   m_ObjectHideFlags: 0
@@ -16630,7 +16630,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: a0b221a6b7e98a04083f11258ea1b7ab, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.127
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -19639,7 +19639,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.165
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -49995,7 +49995,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.157
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -111722,7 +111722,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: 0
-  playerPos: {x: 18, y: 0.5}
+  playerPos: {x: 17.9, y: 0.5}
   playerStorage: {fileID: 11400000, guid: 4ef9d6e9f16e277449e42a6155d83420, type: 2}
   playerHpSO: {fileID: 11400000, guid: a4e18a171d79bc4478c152d439d66619, type: 2}
   arrowSO: {fileID: 11400000, guid: 68c0353608abde7469a18d805178d1a1, type: 2}

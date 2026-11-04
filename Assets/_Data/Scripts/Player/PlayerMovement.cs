@@ -43,14 +43,17 @@ public class PlayerMovement : PlayerAbstract
     }
     protected void PlayFootStepSound()
     {
-        AudioManagerr.Instance.FootStepSource.enabled = true;
+        if (AudioManagerr.Instance != null && AudioManagerr.Instance.FootStepSource != null)
+            AudioManagerr.Instance.FootStepSource.enabled = true;
     }
     protected void StopFootStepSound()
     {
-        AudioManagerr.Instance.FootStepSource.enabled = false;
+        if (AudioManagerr.Instance != null && AudioManagerr.Instance.FootStepSource != null)
+            AudioManagerr.Instance.FootStepSource.enabled = false;
     }
     protected void GetInput()
     {
+        if (InputManager.Instance == null) return;
         this.horizontal = InputManager.Instance.InputHorizontal;
         this.vertical = InputManager.Instance.InputVertical;
         if (this.horizontal != 0 || this.vertical != 0) this.PlayFootStepSound();
@@ -58,20 +61,24 @@ public class PlayerMovement : PlayerAbstract
     }
     protected void Moving()
     {
+        if (this.playerCtrl == null || this.playerCtrl.PlayerDamReceive == null || this._rb == null) return;
         if (this.playerCtrl.PlayerDamReceive.IsDead) return;
-        if (this.playerCtrl.PlayerDash.IsDashing) return;
+        if (this.playerCtrl.PlayerDash != null && this.playerCtrl.PlayerDash.IsDashing) return;
         this._rb.linearVelocity = new Vector3(this.horizontal * this.speed, this.vertical * this.speed, 0f);
 
     }
     protected void ChangeWeapon()
     {
+        if (this.playerCtrl == null || this.playerCtrl.PlayerDamReceive == null || InputManager.Instance == null) return;
         if (this.playerCtrl.PlayerDamReceive.IsHurt) return;
         if (this.TerminateCondition()) return;
         this.switchWeapon = InputManager.Instance.InputSwitchWeapon;
     }
     public bool TerminateCondition()
     {
-        if (!this.playerCtrl.PlayerAttack.Attack && !this.playerCtrl.PlayerShooting.Shoot) return false;
-        return true;
+        if (this.playerCtrl == null) return false;
+        bool isMeleeAttacking = this.playerCtrl.PlayerAttack != null && this.playerCtrl.PlayerAttack.Attack;
+        bool isRangedAttacking = this.playerCtrl.PlayerShooting != null && this.playerCtrl.PlayerShooting.Shoot;
+        return isMeleeAttacking || isRangedAttacking;
     }
 }

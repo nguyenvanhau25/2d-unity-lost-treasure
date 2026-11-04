@@ -33,7 +33,8 @@ public class TreasureResonanceHud : MonoBehaviour
     {
         if (!Application.isPlaying) return;
         if (this.skill == null) this.skill = FindFirstObjectByType<PlayerTreasureResonance>();
-        if (this.skill == null || this.cooldownFill == null) return;
+        if (this.skill == null || this.cooldownFill == null || this.skillIcon == null || this.cooldownText == null || this.keyText == null)
+            return;
 
         float remaining = this.skill.CooldownRemaining;
         this.cooldownFill.fillAmount = remaining / this.skill.Cooldown;
@@ -66,7 +67,12 @@ public class TreasureResonanceHud : MonoBehaviour
 
     protected void EnsureDefaultLayout()
     {
-        if (this.isBuilding || transform.Find("Backdrop") != null) return;
+        if (this.isBuilding) return;
+        if (transform.Find("Backdrop") != null)
+        {
+            this.CacheExistingLayout();
+            return;
+        }
         this.isBuilding = true;
         this.ConfigureRoot();
 
@@ -96,9 +102,22 @@ public class TreasureResonanceHud : MonoBehaviour
         this.isBuilding = false;
     }
 
+    private void CacheExistingLayout()
+    {
+        Transform icon = transform.Find("ResonanceIcon");
+        Transform cooldown = transform.Find("Cooldown");
+        Transform cooldownLabel = transform.Find("CooldownText");
+        Transform key = transform.Find("Key");
+        if (this.skillIcon == null && icon != null) this.skillIcon = icon.GetComponent<Image>();
+        if (this.cooldownFill == null && cooldown != null) this.cooldownFill = cooldown.GetComponent<Image>();
+        if (this.cooldownText == null && cooldownLabel != null) this.cooldownText = cooldownLabel.GetComponent<TextMeshProUGUI>();
+        if (this.keyText == null && key != null) this.keyText = key.GetComponent<TextMeshProUGUI>();
+    }
+
     protected void ConfigureRoot()
     {
         RectTransform rect = GetComponent<RectTransform>();
+        if (rect == null) return;
         rect.anchorMin = rect.anchorMax = new Vector2(1f, 0f);
         rect.pivot = new Vector2(1f, 0f);
         rect.anchoredPosition = new Vector2(-36f, 42f);
@@ -142,7 +161,10 @@ public class TreasureResonanceHud : MonoBehaviour
     protected IEnumerator ShowUnlockBanner()
     {
         yield return new WaitForSeconds(0.15f);
-        TextMeshProUGUI title = transform.Find("SkillName").GetComponent<TextMeshProUGUI>();
+        Transform titleObject = transform.Find("SkillName");
+        if (titleObject == null) yield break;
+        TextMeshProUGUI title = titleObject.GetComponent<TextMeshProUGUI>();
+        if (title == null) yield break;
         Color original = title.color;
         for (float time = 0f; time < 0.75f; time += Time.deltaTime)
         {

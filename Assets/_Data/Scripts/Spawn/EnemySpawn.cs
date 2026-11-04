@@ -23,16 +23,19 @@ public class EnemySpawn : Spawner
     public override Transform Spawn(Transform prefab, Vector3 spawnPos, Quaternion spawnRot)
     {
         Transform newEnemy = base.Spawn(prefab, spawnPos, spawnRot);
-        this.AddHpBar2Obj(newEnemy);
+        if (newEnemy != null) this.AddHpBar2Obj(newEnemy);
 
         return newEnemy;
     }
 
     protected void AddHpBar2Obj(Transform newEnemy)
     {
+        if (newEnemy == null || HpBarEnemySpawn.Instance == null) return;
         EnemyCtrl newEnemyCtrl = newEnemy.GetComponent<EnemyCtrl>();
         Transform newHpBar = HpBarEnemySpawn.Instance.Spawn(HpBarEnemySpawn.hpBarEnemy, newEnemy.position, Quaternion.identity);
+        if (newHpBar == null) return;
         HpBarEnemy hpBarEnemy = newHpBar.GetComponent<HpBarEnemy>();
+        if (hpBarEnemy == null) return;
         hpBarEnemy.SetObjCtrl(newEnemyCtrl);
         hpBarEnemy.SetFollowTarget(newEnemy);
 

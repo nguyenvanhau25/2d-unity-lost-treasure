@@ -604,6 +604,7 @@ GameObject:
   m_Component:
   - component: {fileID: 97295375}
   - component: {fileID: 97295376}
+  - component: {fileID: 97295377}
   m_Layer: 0
   m_Name: Princess
   m_TagString: Princess
@@ -673,6 +674,24 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 6.240398, y: 3.9490356}
   m_EdgeRadius: 0
+--- !u!114 &97295377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97295374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd1f57d2dd0a498d8b773e938ed16d93, type: 3}
+  m_Name: ""
+  m_EditorClassIdentifier: Assembly-CSharp::RescuePrincessStory
+  specialSceneName: Special
+  princessLine: "Cảm ơn ngươi... nhưng kho báu vẫn chưa thực sự yên bình."
+  abductionLine: "Một luồng bóng tối cuốn công chúa vào cánh cổng bí ẩn!"
+  objectiveLine: "Mục tiêu mới: Đến vùng đất đặc biệt và giải cứu công chúa."
+  messageDuration: 2.3
+  disappearDuration: 0.5
 --- !u!1 &111735225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1559,7 +1578,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &219716706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16630,6 +16649,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyCtrl: {fileID: 1194402705}
   target: {fileID: 0}
+  alwaysFollowPlayer: 0
 --- !u!4 &599237532
 Transform:
   m_ObjectHideFlags: 0
@@ -17127,7 +17147,7 @@ RectTransform:
   m_Father: {fileID: 592190725}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -18509,8 +18529,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1771940032}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -20761,6 +20781,9 @@ MonoBehaviour:
   enemySpawnCtrl: {fileID: 1296088671}
   delaySpawnTime: 1
   spawnTimer: 0
+  bossToUnlock: {fileID: 0}
+  bossRevealDelay: 1.5
+  bossReleased: 0
 --- !u!114 &1296088671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26654,6 +26677,8 @@ MonoBehaviour:
   hurtTimeCounter: 0
   playerHpMax: 10
   playerHurtTime: 0.5
+  hitSoundName: SwordBlood
+  hitSoundVolume: 0.8
   meteorStunTime: 0.55
   collide: {fileID: 2129056128}
   playerCtrl: {fileID: 5078617}

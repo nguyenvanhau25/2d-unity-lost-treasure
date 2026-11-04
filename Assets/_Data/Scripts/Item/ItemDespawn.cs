@@ -6,6 +6,7 @@ public class ItemDespawn : DespawnByDistance
 {
     public override void DespawnObj()
     {
-        ItemDropSpawn.Instance.Despawn(transform.parent);
+        if (ItemDropSpawn.Instance != null && transform.parent != null)
+            ItemDropSpawn.Instance.Despawn(transform.parent);
     }
 }

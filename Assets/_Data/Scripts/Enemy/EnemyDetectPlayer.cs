@@ -13,6 +13,11 @@ public class EnemyDetectPlayer : EnemyAbstract
     }
     protected void DetectPlayer()
     {
+        if (this.enemyCtrl == null || this.enemyCtrl.EnemyFollow == null || this.enemyCtrl.EnemyFollow.Target == null)
+        {
+            this.detect = false;
+            return;
+        }
         if (!this.CanDetect()) return;
         Vector3 playerPos = this.enemyCtrl.EnemyFollow.Target.position;
 
@@ -31,6 +36,11 @@ public class EnemyDetectPlayer : EnemyAbstract
     }
     protected bool CanDetect()
     {
+        if (this.enemyCtrl == null || this.enemyCtrl.EnemyFollow == null || this.enemyCtrl.EnemyFollow.Target == null)
+        {
+            this.detect = false;
+            return false;
+        }
         if (this.enemyCtrl.EnemyFollow.Target.position.z == 1)//Check Player Die
         {
             this.detect = false;

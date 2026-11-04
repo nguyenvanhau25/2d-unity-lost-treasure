@@ -29,8 +29,7 @@ public class EnemyFollow : EnemyAbstract
     }
     protected void Following()
     {
-        
-        if (this.target == null) return;
+        if (this.target == null || this.enemyCtrl == null || this.enemyCtrl.EnemyDamReceive == null) return;
         if (this.enemyCtrl.EnemyDamReceive.IsDead) return;
         if (this.enemyCtrl.EnemyDamReceive.IsHurt) return;
         if (alwaysFollowPlayer)
@@ -40,6 +39,7 @@ public class EnemyFollow : EnemyAbstract
         }
         else
         {
+            if (this.enemyCtrl.EnemyDetect == null || this.enemyCtrl.Rigid == null || this.enemyCtrl.EnemyMovement == null) return;
             if (!this.enemyCtrl.EnemyDetect.Detect) return;
             this.enemyCtrl.Rigid.MovePosition(Vector2.MoveTowards
             (transform.parent.position, this.target.position, this.enemyCtrl.EnemyMovement.Speed * Time.fixedDeltaTime));
@@ -47,6 +47,8 @@ public class EnemyFollow : EnemyAbstract
     }
     protected void FollowPlayer()
     {
+        if (this.enemyCtrl == null || this.enemyCtrl.Rigid == null || this.enemyCtrl.EnemyMovement == null || this.target == null)
+            return;
         this.enemyCtrl.Rigid.MovePosition(
             Vector2.MoveTowards(
                 transform.parent.position,

@@ -11,6 +11,7 @@ public class SceneTransition : DinoBehaviourScript
     [SerializeField] protected ArrowSO arrowSO;
     [SerializeField] protected Inventory inventory;
     [SerializeField] protected Animator transAnim;
+    protected bool isTransitioning;
     protected override void LoadComponent()
     {
         base.LoadComponent();
@@ -38,7 +39,8 @@ public class SceneTransition : DinoBehaviourScript
     protected void LoadInventory()
     {
         if (this.inventory != null) return;
-        this.inventory = GameObject.Find("Player").GetComponentInChildren<Inventory>();
+        PlayerCtrl player = PlayerCtrl.Instance;
+        if (player != null) this.inventory = player.GetComponentInChildren<Inventory>();
     }
     protected void LoadAnimator()
     {
@@ -47,30 +49,35 @@ public class SceneTransition : DinoBehaviourScript
     }
     protected void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.gameObject.CompareTag("Player")) return;
+        if (this.isTransitioning || other == null || other.GetComponentInParent<PlayerCtrl>() == null) return;
+        this.isTransitioning = true;
         this.SetHp();
         this.SetPos();
         this.SetInventory();
         this.SetArrowCount();
         this.NextLevel();
-        AudioManagerr.Instance.FootStepSource.enabled = false;
+        if (AudioManagerr.Instance != null && AudioManagerr.Instance.FootStepSource != null)
+            AudioManagerr.Instance.FootStepSource.enabled = false;
     }
     protected void SetHp()
     {
-        this.playerHpSO.currentHp = PlayerCtrl.Instance.PlayerDamReceive.Hp;
+        if (this.playerHpSO != null && PlayerCtrl.Instance != null && PlayerCtrl.Instance.PlayerDamReceive != null)
+            this.playerHpSO.currentHp = PlayerCtrl.Instance.PlayerDamReceive.Hp;
     }
     protected void SetPos()
     {
-        this.playerStorage.intialValue = playerPos;
+        if (this.playerStorage != null) this.playerStorage.intialValue = playerPos;
     }
     protected void SetInventory()
     {
+        if (this.inventory == null) return;
         this.inventory.ClearInventory();
         this.inventory.SaveItems();
     }
     protected void SetArrowCount()
     {
-        this.arrowSO.arrowCounts = ArrowPlayerSpawn.Instance.SpawnCount;
+        if (this.arrowSO != null && ArrowPlayerSpawn.Instance != null)
+            this.arrowSO.arrowCounts = ArrowPlayerSpawn.Instance.SpawnCount;
     }
     protected void NextLevel()
     {
@@ -79,17 +86,23 @@ public class SceneTransition : DinoBehaviourScript
     IEnumerator LoadLevel()
     {
         this.StopPlayerMovement();
-        this.transAnim.SetTrigger("End");
+        if (this.transAnim != null) this.transAnim.SetTrigger("End");
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(this.sceneName.ToString());
-        this.transAnim.SetTrigger("Start");
     }
     protected void StopPlayerMovement()
     {
-        PlayerCtrl.Instance.PlayerMovement._Rb.constraints = RigidbodyConstraints2D.FreezeAll;
-        PlayerCtrl.Instance.PlayerMovement.enabled = false;
-        PlayerCtrl.Instance.PlayerMovement.SetHorizontal(0);
-        PlayerCtrl.Instance.PlayerMovement.SetVertical(0);
-        PlayerCtrl.Instance.PlayerAttack.enabled = false;
+        PlayerCtrl player = PlayerCtrl.Instance;
+        if (player == null) return;
+
+        if (player.PlayerMovement != null)
+        {
+            if (player.PlayerMovement._Rb != null)
+                player.PlayerMovement._Rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            player.PlayerMovement.enabled = false;
+            player.PlayerMovement.SetHorizontal(0);
+            player.PlayerMovement.SetVertical(0);
+        }
+        if (player.PlayerAttack != null) player.PlayerAttack.enabled = false;
     }
 }

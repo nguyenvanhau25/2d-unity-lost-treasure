@@ -17,6 +17,7 @@ public abstract class PlayerAbstract : DinoBehaviourScript
     protected void LoadPlayerCtrl()
     {
         if (this.playerCtrl != null) return;
-        this.playerCtrl = transform.parent.GetComponent<PlayerCtrl>();
+        if (transform.parent != null)
+            this.playerCtrl = transform.parent.GetComponent<PlayerCtrl>();
     }
 }

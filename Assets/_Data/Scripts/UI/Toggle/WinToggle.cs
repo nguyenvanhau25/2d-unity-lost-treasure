@@ -18,8 +18,8 @@ public class WinToggle : BaseToggle
     protected override void Start()
     {
         base.Start();
-        this.sceneTrans.gameObject.SetActive(true);
-        this.winMenu.gameObject.SetActive(false);
+        if (this.sceneTrans != null) this.sceneTrans.gameObject.SetActive(true);
+        if (this.winMenu != null) this.winMenu.gameObject.SetActive(false);
     }
     protected override void LoadComponent()
     {
@@ -31,13 +31,15 @@ public class WinToggle : BaseToggle
     protected void LoadWinMenu()
     {
         if (this.winMenu != null) return;
-        this.winMenu = GameObject.Find("WinMenu").transform;
+        GameObject winMenuObject = GameObject.Find("WinMenu");
+        if (winMenuObject != null) this.winMenu = winMenuObject.transform;
     }
 
     protected void LoadPlayerMenu()
     {
         if (this.playerMenu != null) return;
-        this.playerMenu = GameObject.Find("UITopLeft/PlayerMenu").transform;
+        GameObject playerMenuObject = GameObject.Find("UITopLeft/PlayerMenu");
+        if (playerMenuObject != null) this.playerMenu = playerMenuObject.transform;
     }
     public void WinGameMenu()
     {
@@ -47,9 +49,9 @@ public class WinToggle : BaseToggle
     IEnumerator Wait2DisplayMenu()
     {
         yield return new WaitForSeconds(2);
-        AudioManagerr.Instance.OpenMusic();
-        this.sceneTrans.gameObject.SetActive(false);
-        this.playerMenu.gameObject.SetActive(false);
-        this.winMenu.gameObject.SetActive(true);
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.OpenMusic();
+        if (this.sceneTrans != null) this.sceneTrans.gameObject.SetActive(false);
+        if (this.playerMenu != null) this.playerMenu.gameObject.SetActive(false);
+        if (this.winMenu != null) this.winMenu.gameObject.SetActive(true);
     }
 }

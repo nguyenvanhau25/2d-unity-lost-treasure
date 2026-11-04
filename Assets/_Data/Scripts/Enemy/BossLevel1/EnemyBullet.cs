@@ -32,7 +32,6 @@ public class EnemyBullet : MonoBehaviour
         if (player != null)
         {
             player.Deduct(dmg);
-            Debug.Log("Trúng player rồi!");
 
             Destroy(gameObject);
         }

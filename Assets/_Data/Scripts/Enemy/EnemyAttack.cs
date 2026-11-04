@@ -19,6 +19,8 @@ public abstract class EnemyAttack : EnemyAbstract
     }
     protected virtual void Attacking()
     {
+        if (this.enemyCtrl == null || this.enemyCtrl.EnemyDamReceive == null ||
+            this.enemyCtrl.EnemyDetect == null || this.enemyCtrl.EnemyFollow == null) return;
         if (this.enemyCtrl.EnemyDamReceive.IsDead) return;
         if (!this.enemyCtrl.EnemyDetect.Detect)
         {
@@ -36,6 +38,8 @@ public abstract class EnemyAttack : EnemyAbstract
     }
     protected bool CanAttack()
     {
+        if (this.enemyCtrl == null || this.enemyCtrl.EnemyFollow == null || this.enemyCtrl.EnemyFollow.Target == null || transform.parent == null)
+            return false;
         this.distanceAttack = Vector3.Distance(transform.parent.position, this.enemyCtrl.EnemyFollow.Target.position);
         if (this.distanceAttack <= this.disAttackLimit && this.attackCoolDownCounter <= 0f)
             return true;

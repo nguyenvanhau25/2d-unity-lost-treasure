@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Ultimate unlocked exclusively in LastWar. Q releases three treasure pulses;
+/// Ultimate unlocked in LastWar and Special. Q releases three treasure pulses;
 /// each pulse damages, slows and marks enemies. Three marks trigger an explosion.
 /// </summary>
 public class PlayerTreasureResonance : MonoBehaviour
@@ -41,7 +41,8 @@ public class PlayerTreasureResonance : MonoBehaviour
     protected void Awake()
     {
         this.playerCtrl = GetComponent<PlayerCtrl>();
-        this.unlocked = SceneManager.GetActiveScene().name == SceneName.LastWar.ToString();
+        string sceneName = SceneManager.GetActiveScene().name;
+        this.unlocked = sceneName == SceneName.LastWar.ToString() || sceneName == "Special";
         if (!this.unlocked) enabled = false;
     }
 
@@ -85,24 +86,49 @@ public class PlayerTreasureResonance : MonoBehaviour
         Vector3 origin = transform.position;
         TreasureResonanceVfx.SpawnPulse(origin, this.radius, pulseIndex);
 
+        // Prefer overlap queries for ordinary enemies, then also inspect active
+        // receivers directly. Some copied bosses use colliders on a different
+        // child/layer, so relying on Physics2D alone would show the pulse but
+        // never apply damage to them.
         Collider2D[] colliders = Physics2D.OverlapCircleAll(origin, this.radius);
-        HashSet<EnemyDamReceive> hitEnemies = new HashSet<EnemyDamReceive>();
+        HashSet<DamageReceiver> hitEnemies = new HashSet<DamageReceiver>();
         foreach (Collider2D hit in colliders)
         {
-            EnemyDamReceive enemy = hit.GetComponentInParent<EnemyDamReceive>();
-            if (enemy == null || enemy.IsDead || !hitEnemies.Add(enemy)) continue;
-
-            enemy.Deduct(this.pulseDamage);
-            EnemyCtrl enemyCtrl = enemy.GetComponentInParent<EnemyCtrl>();
-            if (enemyCtrl == null) continue;
-
-            BossResonanceImpact bossImpact = enemyCtrl.GetComponent<BossResonanceImpact>();
-            if (bossImpact != null) bossImpact.PlayPulseImpact(pulseIndex);
-
-            TreasureResonanceMark mark = enemyCtrl.GetComponent<TreasureResonanceMark>();
-            if (mark == null) mark = enemyCtrl.gameObject.AddComponent<TreasureResonanceMark>();
-            mark.AddMark(enemy, this.detonationDamage, this.slowMultiplier, this.slowDuration);
+            DamageReceiver receiver = hit.GetComponentInParent<DamageReceiver>();
+            this.HitReceiver(receiver, hitEnemies, pulseIndex);
         }
+
+        foreach (DamageReceiver receiver in FindObjectsByType<DamageReceiver>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+        {
+            if (Vector2.Distance(origin, receiver.transform.position) > this.radius) continue;
+            this.HitReceiver(receiver, hitEnemies, pulseIndex);
+        }
+
+        HashSet<BossLevel1> hitLegacyBosses = new HashSet<BossLevel1>();
+        foreach (BossLevel1 boss in FindObjectsByType<BossLevel1>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+        {
+            if (boss.IsDead || Vector2.Distance(origin, boss.transform.position) > this.radius || !hitLegacyBosses.Add(boss)) continue;
+            boss.ReceiveResonanceHit(this.pulseDamage);
+        }
+    }
+
+    private void HitReceiver(DamageReceiver receiver, HashSet<DamageReceiver> hitEnemies, int pulseIndex)
+    {
+        if (receiver == null || receiver is PlayerDamReceive || receiver.IsDead || !hitEnemies.Add(receiver)) return;
+
+        receiver.Deduct(this.pulseDamage);
+        EnemyDamReceive enemy = receiver as EnemyDamReceive;
+        if (enemy == null) return;
+
+        EnemyCtrl enemyCtrl = enemy.GetComponentInParent<EnemyCtrl>();
+        if (enemyCtrl == null) return;
+
+        BossResonanceImpact bossImpact = enemyCtrl.GetComponent<BossResonanceImpact>();
+        if (bossImpact != null) bossImpact.PlayPulseImpact(pulseIndex);
+
+        TreasureResonanceMark mark = enemyCtrl.GetComponent<TreasureResonanceMark>();
+        if (mark == null) mark = enemyCtrl.gameObject.AddComponent<TreasureResonanceMark>();
+        mark.AddMark(enemy, this.detonationDamage, this.slowMultiplier, this.slowDuration);
     }
 
     protected void CreateHud()

@@ -16,6 +16,7 @@ public class PlayerDamReceive : DamageReceiver
     protected override void Start()
     {
         base.Start();
+        if (this.playerHpSO == null) return;
         this.hp = this.playerHpSO.currentHp;
         this.playerHpMax = this.playerHpSO.maxHp;
     }
@@ -24,6 +25,7 @@ public class PlayerDamReceive : DamageReceiver
         base.LoadComponent();
         this.LoadCollider();
         this.LoadPlayerCtrl();
+        this.LoadPlayerHpSO();
     }
     protected override void ResetValue()
     {
@@ -40,8 +42,18 @@ public class PlayerDamReceive : DamageReceiver
         if (this.playerCtrl != null) return;
         this.playerCtrl = GetComponentInParent<PlayerCtrl>();
     }
+    protected void LoadPlayerHpSO()
+    {
+        if (this.playerHpSO != null) return;
+        this.playerHpSO = Resources.Load<PlayerHpSO>("GameData/PlayerHpSO");
+    }
     protected override void Reborn()
     {
+        if (this.playerHpSO == null)
+        {
+            this.hp = Mathf.Max(1, this.hp);
+            return;
+        }
         this.hpMax = this.playerHpSO.maxHp;
         this.hurtTime = this.playerHurtTime;
         this.hp = this.playerHpSO.currentHp;
@@ -50,8 +62,8 @@ public class PlayerDamReceive : DamageReceiver
     protected override void OnDead()
     {
         this.StopMovement();
-        AudioManagerr.Instance.ClockMusic();
-        RestartToggle.Instance.RestartGameMenu();
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.ClockMusic();
+        if (RestartToggle.Instance != null) RestartToggle.Instance.RestartGameMenu();
     }
 
     public override void Deduct(int damage)
@@ -81,10 +93,12 @@ public class PlayerDamReceive : DamageReceiver
     }
     protected void StopMovement()
     {
-        this.collide.enabled = false;
+        if (this.collide != null) this.collide.enabled = false;
+        if (transform.parent == null) return;
         Vector3 posDead = transform.parent.position;
         posDead.z = 1;
         transform.parent.position = posDead;
-        this.playerCtrl.PlayerMovement._Rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        if (this.playerCtrl != null && this.playerCtrl.PlayerMovement != null && this.playerCtrl.PlayerMovement._Rb != null)
+            this.playerCtrl.PlayerMovement._Rb.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 }

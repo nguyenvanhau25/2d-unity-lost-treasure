@@ -18,8 +18,8 @@ public class RestartToggle : BaseToggle
     protected override void Start()
     {
         base.Start();
-        this.sceneTrans.gameObject.SetActive(true);
-        this.restartMenu.gameObject.SetActive(false);
+        if (this.sceneTrans != null) this.sceneTrans.gameObject.SetActive(true);
+        if (this.restartMenu != null) this.restartMenu.gameObject.SetActive(false);
     }
     protected override void LoadComponent()
     {
@@ -30,7 +30,8 @@ public class RestartToggle : BaseToggle
     protected void LoadRestartMenu()
     {
         if (this.restartMenu != null) return;
-        this.restartMenu = GameObject.Find("RestartMenu").transform;
+        GameObject restartMenuObject = GameObject.Find("RestartMenu");
+        if (restartMenuObject != null) this.restartMenu = restartMenuObject.transform;
     }
 
     public void RestartGameMenu()
@@ -41,8 +42,8 @@ public class RestartToggle : BaseToggle
     IEnumerator Wait2DisplayMenu()
     {
         yield return new WaitForSeconds(3);
-        this.sceneTrans.gameObject.SetActive(false);
-        this.restartMenu.gameObject.SetActive(true);
-        AudioManagerr.Instance.PlaySFX("GameOver");
+        if (this.sceneTrans != null) this.sceneTrans.gameObject.SetActive(false);
+        if (this.restartMenu != null) this.restartMenu.gameObject.SetActive(true);
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("GameOver");
     }
 }

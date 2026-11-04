@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class BossDespawn : DespawnByTime
 {
+    [Header("After Defeat")]
+    [Tooltip("Remove this boss from the scene after the death delay.")]
+    [SerializeField] private bool deactivateBossOnDeath = true;
+    [Tooltip("Optional object to activate after this boss dies, such as a door or scene transition.")]
     [SerializeField] private GameObject obj;
+    [SerializeField] private bool activateObjectOnDeath = true;
     protected override void ResetValue()
     {
         base.ResetValue();
@@ -12,8 +17,15 @@ public class BossDespawn : DespawnByTime
     }
     public override void DespawnObj()
     {
-        transform.parent.gameObject.SetActive(false);
-        obj.SetActive(true);
+        if (this.deactivateBossOnDeath)
+        {
+            transform.parent.gameObject.SetActive(false);
+        }
+
+        if (this.activateObjectOnDeath && this.obj != null)
+        {
+            this.obj.SetActive(true);
+        }
     }
     protected override bool CanDespawn()
     {

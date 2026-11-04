@@ -16,6 +16,7 @@ public class BaseToggle : DinoBehaviourScript
     protected void LoadSceneTrans()
     {
         if (this.sceneTrans != null) return;
-        this.sceneTrans = GameObject.Find("SceneTransition").transform;
+        GameObject sceneTransitionObject = GameObject.Find("SceneTransition");
+        if (sceneTransitionObject != null) this.sceneTrans = sceneTransitionObject.transform;
     }
 }

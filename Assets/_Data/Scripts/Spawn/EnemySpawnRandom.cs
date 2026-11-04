@@ -38,6 +38,8 @@ public class EnemySpawnRandom : DinoBehaviourScript
     }
     protected void EnemySpawning()
     {
+        if (this.enemySpawnCtrl == null || this.enemySpawnCtrl.EnemySpawn == null || this.enemySpawnCtrl.EnemySpawnPoint == null)
+            return;
         if (!this.RandomSpawnLimit()) return;
 
         this.spawnTimer += Time.deltaTime;
@@ -45,6 +47,7 @@ public class EnemySpawnRandom : DinoBehaviourScript
         this.spawnTimer = 0f;
 
         Transform spawnPoint = this.enemySpawnCtrl.EnemySpawnPoint.GetRandomPoint();
+        if (spawnPoint == null) return;
         Vector3 spawnPointPos = spawnPoint.position;
         Quaternion spawPointRot = spawnPoint.rotation;
         Transform enemy = this.enemySpawnCtrl.EnemySpawn.GetRandomPrefab();
@@ -70,7 +73,8 @@ public class EnemySpawnRandom : DinoBehaviourScript
 
     protected void CheckWaveCleared()
     {
-        if (this.bossReleased || this.bossToUnlock == null) return;
+        if (this.bossReleased || this.bossToUnlock == null || this.enemySpawnCtrl == null || this.enemySpawnCtrl.EnemySpawn == null)
+            return;
 
         if (this.enemySpawnCtrl.EnemySpawn.SpawnCount > 0 || this.livingWaveEnemies > 0)
         {
@@ -88,6 +92,7 @@ public class EnemySpawnRandom : DinoBehaviourScript
 
     protected bool RandomSpawnLimit()
     {
+        if (this.enemySpawnCtrl == null || this.enemySpawnCtrl.EnemySpawn == null) return false;
         if (this.enemySpawnCtrl.EnemySpawn.SpawnCount <= 0) return false;
         return true;
     }

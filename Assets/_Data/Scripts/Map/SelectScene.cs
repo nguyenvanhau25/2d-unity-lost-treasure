@@ -7,5 +7,6 @@ public enum SceneName
     RecusePrincess,
     MainMenu,
     BeginScreen,
-    islandScene
+    islandScene,
+    Special
 }

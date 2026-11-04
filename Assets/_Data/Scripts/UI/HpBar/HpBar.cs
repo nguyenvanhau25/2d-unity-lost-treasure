@@ -23,7 +23,7 @@ public class HpBar : DinoBehaviourScript
     }
     protected virtual void HpShowing()
     {
-        
+        if (this.sliderHp == null) return;
         this.sliderHp.SetMaxHp(this.hpMax);
         this.sliderHp.SetCurrentHp(this.hp);
     }

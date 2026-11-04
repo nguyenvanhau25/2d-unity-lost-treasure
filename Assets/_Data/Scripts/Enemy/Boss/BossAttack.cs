@@ -8,7 +8,7 @@ public class BossAttack : DinoBehaviourScript
     protected override void Start()
     {
         base.Start();
-        AudioManagerr.Instance.OpenMusic();
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.OpenMusic();
     }
     protected override void LoadComponent()
     {
@@ -24,13 +24,14 @@ public class BossAttack : DinoBehaviourScript
 
     protected void FixedUpdate()
     {
+        if (PlayerCtrl.Instance?.PlayerDamReceive == null || this.bossAttackCtrl?.BossCtrl?.BossDamReceive == null) return;
         if (PlayerCtrl.Instance.PlayerDamReceive.IsDead) return;
         if (this.bossAttackCtrl.BossCtrl.BossDamReceive.IsDead) return;
         if (this.bossAttackCtrl.BossCtrl.BossDamReceive.Hp > 30)
         {
-            this.bossAttackCtrl.BossAttack1.Attacking1();
-            this.bossAttackCtrl.BossAttack2.Attacking2();
+            this.bossAttackCtrl.BossAttack1?.Attacking1();
+            this.bossAttackCtrl.BossAttack2?.Attacking2();
         }
-        this.bossAttackCtrl.BossAttack3.Attacking3();
+        this.bossAttackCtrl.BossAttack3?.Attacking3();
     }
 }

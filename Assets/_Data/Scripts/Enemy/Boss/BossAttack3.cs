@@ -41,8 +41,10 @@ public class BossAttack3 : DinoBehaviourScript
 
     public void Attacking3()
     {
+        if (this.bossAttackCtrl?.BossCtrl?.BossDamReceive == null || this.bossAttackCtrl.BossAttack1 == null || this.bossAttackCtrl.BossAttack2 == null)
+            return;
         if (this.bossAttackCtrl.BossAttack1.isWorking1 || this.bossAttackCtrl.BossAttack2.isWorking2) return;
-        if (!isWorking3 && this.bossAttackCtrl.BossCtrl.BossDamReceive.Hp <= 30)
+        if (!isWorking3 && this.bossAttackCtrl.BossCtrl.BossDamReceive.Hp <= 30 && this.collide != null && this.lineRenderer != null && this.bossAttackCtrl.BossAttack1.Player != null)
         {
             StartCoroutine(DoWork3());
         }
@@ -51,9 +53,12 @@ public class BossAttack3 : DinoBehaviourScript
 
     protected IEnumerator DoWork3()
     {
+        if (this.bossAttackCtrl?.BossCtrl?.BossDamReceive == null || this.collide == null || this.lineRenderer == null || this.bossAttackCtrl.BossAttack1?.Player == null)
+            yield break;
+
         this.isWorking3 = true;
         this.bossAttackCtrl.angry = true;
-        AudioManagerr.Instance.PlaySFX("MonsterBreath");
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("MonsterBreath");
         
         this.lineRenderer.enabled = true;
         float timer = 0f;
@@ -81,11 +86,19 @@ public class BossAttack3 : DinoBehaviourScript
         this.disNewPlayerPos = this.bossAttackCtrl.DistanceToTarget(finalPlayerPos);
         while (disNewPlayerPos > 0)
         {
-            if (this.bossAttackCtrl.BossCtrl.BossDamReceive.IsDead) yield break;
+            if (this.bossAttackCtrl.BossCtrl.BossDamReceive.IsDead)
+            {
+                this.collide.enabled = false;
+                this.lineRenderer.enabled = false;
+                this.isWorking3 = false;
+                yield break;
+            }
             this.collide.enabled = true;
             this.disNewPlayerPos = this.bossAttackCtrl.DistanceToTarget(finalPlayerPos);
-            this.bossAttackCtrl.BossCtrl.BossFlipDirect.Flipping(this.bossAttackCtrl.BossAttack1.Player);
-            transform.parent.parent.position = this.bossAttackCtrl.MoveToTarget(finalPlayerPos);
+            if (this.bossAttackCtrl.BossCtrl.BossFlipDirect != null)
+                this.bossAttackCtrl.BossCtrl.BossFlipDirect.Flipping(this.bossAttackCtrl.BossAttack1.Player);
+            if (transform.parent?.parent != null)
+                transform.parent.parent.position = this.bossAttackCtrl.MoveToTarget(finalPlayerPos);
             yield return null;
         }
 

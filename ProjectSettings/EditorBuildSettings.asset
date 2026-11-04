@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/_Data/Scenes/RecusePrincess.unity
     guid: 84e6077f291a100479d7d17ff8756929
   - enabled: 1
+    path: Assets/_Data/Scenes/Special.unity
+    guid: aa9be19a67239fe4ea0cfeeefb5af3bc
+  - enabled: 1
     path: Assets/_Data/Scenes/LastWar.unity
     guid: 625c5013532b1a24694c8eb03ea44979
   - enabled: 1

@@ -6,9 +6,10 @@ public class ArrowDespawn : DespawnByDistance
 {
     public override void DespawnObj()
     {
+        if (transform.parent == null) return;
         if (ArrowPlayerSpawn.Instance != null)
             ArrowPlayerSpawn.Instance.Despawn(transform.parent);
-        else
+        else if (ArrowEnemySpawn.Instance != null)
             ArrowEnemySpawn.Instance.Despawn(transform.parent);
     }
 }

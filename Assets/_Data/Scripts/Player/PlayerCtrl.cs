@@ -31,6 +31,10 @@ public class PlayerCtrl : DinoBehaviourScript
         if(PlayerCtrl.instance != null) Debug.Log("Only 1 PlayerCtrl allow to exist");
         PlayerCtrl.instance = this;
     }
+    private void OnDestroy()
+    {
+        if (PlayerCtrl.instance == this) PlayerCtrl.instance = null;
+    }
     protected override void LoadComponent()
     {
         base.LoadComponent();

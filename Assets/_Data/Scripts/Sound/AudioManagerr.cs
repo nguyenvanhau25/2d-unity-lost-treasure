@@ -32,14 +32,15 @@ public class AudioManagerr : DinoBehaviourScript
     }
     public void ClockMusic()
     {
-        this.musicSource.gameObject.SetActive(false);
+        if (this.musicSource != null) this.musicSource.gameObject.SetActive(false);
     }
     public void OpenMusic()
     {
-        this.musicSource.gameObject.SetActive(true);
+        if (this.musicSource != null) this.musicSource.gameObject.SetActive(true);
     }
     public void PlayMusic(string name)
     {
+        if (this.musicSource == null) return;
         Sound s = Array.Find(musicSound, sound => sound.soundName.ToString() == name);
         if (s == null) return;
         this.musicSource.clip = s.clip;
@@ -47,6 +48,7 @@ public class AudioManagerr : DinoBehaviourScript
     }
     public void PlayMusic(string name, float volume)
     {
+        if (this.musicSource == null) return;
         Sound s = Array.Find(musicSound, sound => sound.soundName.ToString() == name);
         if (s == null) return;
         this.musicSource.clip = s.clip;
@@ -55,18 +57,24 @@ public class AudioManagerr : DinoBehaviourScript
     }
     public void StopMusic()
     {
-        this.musicSource.Stop();
+        if (this.musicSource != null) this.musicSource.Stop();
     }
     public void PlaySFX(string name)
     {
+        if (this.sfxSource == null) return;
         Sound s = Array.Find(sfxSound, sound => sound.soundName.ToString() == name);
         if (s == null) return;
         this.sfxSource.PlayOneShot(s.clip);
     }
     public void PlaySFX(string name, float volume)
     {
+        if (this.sfxSource == null) return;
         Sound s = Array.Find(sfxSound, sound => sound.soundName.ToString() == name);
         if (s == null) return;
         this.sfxSource.PlayOneShot(s.clip, volume);
+    }
+    private void OnDestroy()
+    {
+        if (AudioManagerr.instance == this) AudioManagerr.instance = null;
     }
 }

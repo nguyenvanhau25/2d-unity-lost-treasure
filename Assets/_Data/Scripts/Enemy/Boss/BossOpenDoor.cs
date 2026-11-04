@@ -20,10 +20,12 @@ public class BossOpenDoor : DinoBehaviourScript
     protected void LoadSceneTrans()
     {
         if (this.sceneTrans != null) return;
-        this.sceneTrans = GameObject.Find("SceneTransition_1").transform;
+        GameObject transitionObject = GameObject.Find("SceneTransition_1");
+        if (transitionObject != null) this.sceneTrans = transitionObject.transform;
     }
     protected void Update()
     {
+        if (this.bossCtrl?.BossDamReceive == null || this.sceneTrans == null) return;
         if (this.bossCtrl.BossDamReceive.IsDead) this.sceneTrans.gameObject.SetActive(true);
     }
 }

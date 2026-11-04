@@ -29,7 +29,6 @@ public class BossLevel1 : MonoBehaviour
     [FormerlySerializedAs("hPBoss"), SerializeField, Min(1)] private int maxHealth = 50;
     [SerializeField, Min(0)] private int slashDamage = 2;
     [SerializeField, Min(0)] private int arrowDamage = 1;
-    [SerializeField, Min(0f)] private float hurtDuration = 0.5f;
     [SerializeField] private Slider hPSlider;
 
     [Header("Hit feedback")]
@@ -47,6 +46,7 @@ public class BossLevel1 : MonoBehaviour
 
     private float damageTimer;
     private bool isDead;
+    public bool IsDead => this.isDead;
     private Color originalHitColor = Color.white;
     private Coroutine hitFlashRoutine;
 
@@ -54,7 +54,7 @@ public class BossLevel1 : MonoBehaviour
     {
         if (this.hitRenderer == null) this.hitRenderer = GetComponent<SpriteRenderer>();
         if (this.bossAnimator == null) this.bossAnimator = GetComponent<Animator>();
-        healEffect.SetActive(false);
+        if (this.healEffect != null) this.healEffect.SetActive(false);
     }
 
     private void OnEnable()
@@ -94,17 +94,11 @@ public class BossLevel1 : MonoBehaviour
 
     private void TakeDamage(int damage)
     {
-        Debug.Log(
-    "TakeDamage: damage = " + damage +
-    ", currentHealth = " + this.currentHealth +
-    ", isDead = " + this.isDead
-);
+
 
         if (damage <= 0 || this.isDead) return;
 
         this.currentHealth = Mathf.Max(0, this.currentHealth - damage);
-
-        Debug.Log("NEW HP = " + this.currentHealth);
           if (this.hPSlider != null) this.hPSlider.value = this.currentHealth;
         if (this.bossAnimator != null && this.HasAnimatorParameter(this.hurtTriggerName, 
             AnimatorControllerParameterType.Trigger))
@@ -122,8 +116,13 @@ public class BossLevel1 : MonoBehaviour
 
     public void ReceiveArrowHit()
     {
-        Debug.Log("ReceiveArrowHit - arrowDamage = " + this.arrowDamage);
         this.TakeDamage(this.arrowDamage);
+    }
+
+    /// <summary>Used by Treasure Resonance without changing normal sword/arrow damage.</summary>
+    public void ReceiveResonanceHit(int damage)
+    {
+        this.TakeDamage(damage);
     }
 
     private IEnumerator FlashOnHit()
@@ -181,7 +180,7 @@ public class BossLevel1 : MonoBehaviour
         GameObject bullet = Instantiate(this.bulletEnemy, this.firePos.position, Quaternion.identity);
         EnemyBullet enemyBullet = bullet.GetComponent<EnemyBullet>();
         if (enemyBullet == null) enemyBullet = bullet.AddComponent<EnemyBullet>();
-        AudioManagerr.Instance.PlaySFX("BossShoot");
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("BossShoot");
         enemyBullet.SetMovementDirection(directionToPlayer * this.bulletSpeedNormal);
     }
 
@@ -189,7 +188,7 @@ public class BossLevel1 : MonoBehaviour
     {
         if (this.bulletEnemy == null || this.firePos == null) return;
         float angleStep = 360f / Mathf.Max(1, this.bulletsAroundCount);
-        AudioManagerr.Instance.PlaySFX("BossShoot");
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("BossShoot");
         for (int i = 0; i < this.bulletsAroundCount; i++)
         {
             float angle = i * angleStep * Mathf.Deg2Rad;
@@ -209,7 +208,7 @@ public class BossLevel1 : MonoBehaviour
             ? this.enemySpanwPos.position
             : this.transform.position;
         GameObject spawnedEnemy = Instantiate(this.miniEmeny, spawnPosition, Quaternion.identity);
-        AudioManagerr.Instance.PlaySFX("CreateMini");
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("CreateMini");
         EnemyFollow enemyFollow = spawnedEnemy.GetComponentInChildren<EnemyFollow>();
         if (enemyFollow != null) enemyFollow.SetAlwaysFollowPlayer(true);
 
@@ -223,16 +222,16 @@ public class BossLevel1 : MonoBehaviour
         {
             return;
         } 
-        healEffect.SetActive(true);
+        if (this.healEffect != null) this.healEffect.SetActive(true);
         this.currentHealth = Mathf.Min(this.maxHealth, this.currentHealth + this.healAmount);
-        AudioManagerr.Instance.PlaySFX("HealBossLevel1");
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("HealBossLevel1");
         if (this.hPSlider != null) this.hPSlider.value = this.currentHealth;
         Invoke("SetAvtiveHealEffect", 0.5f);
     }
 
     private void SetAvtiveHealEffect()
     {
-        healEffect.SetActive(false);
+        if (this.healEffect != null) this.healEffect.SetActive(false);
     }
 
     private IEnumerator RandomSkill()

@@ -14,7 +14,6 @@ public class EnemyDespawn : DespawnByTime
     {
         if (this.enemyCtrl != null) return;
         this.enemyCtrl = GetComponentInParent<EnemyCtrl>();
-        Debug.Log(transform.name + ": LoadEnemyCtrl");
     }
     public override void DespawnObj()
     {
@@ -23,10 +22,11 @@ public class EnemyDespawn : DespawnByTime
             base.DespawnObj();
             return;
         }
-        EnemySpawn.Instance.Despawn(transform.parent);
+        if (transform.parent != null) EnemySpawn.Instance.Despawn(transform.parent);
     }
     protected override bool CanDespawn()
     {
+        if (this.enemyCtrl == null || this.enemyCtrl.EnemyDamReceive == null) return false;
         if (!this.enemyCtrl.EnemyDamReceive.IsDead) return false;
         return base.CanDespawn();
     }

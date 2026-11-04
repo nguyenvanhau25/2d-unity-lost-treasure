@@ -27,7 +27,8 @@ public class BossAttack1 : DinoBehaviourScript
     protected void LoadPlayer()
     {
         if (this.player != null) return;
-        this.player = GameObject.Find("Player").transform;
+        GameObject playerObject = GameObject.Find("Player");
+        if (playerObject != null) this.player = playerObject.transform;
     }
     protected void LoadBossAttackCtrl()
     {
@@ -42,29 +43,34 @@ public class BossAttack1 : DinoBehaviourScript
     protected void LoadBoxCollider()
     {
         if (this.collide2 != null) return;
-        this.collide2 = GameObject.Find("Blockplayer").transform.GetComponent<BoxCollider2D>();
+        GameObject blockPlayer = GameObject.Find("Blockplayer");
+        if (blockPlayer != null) this.collide2 = blockPlayer.GetComponent<BoxCollider2D>();
     }
     protected void LoadSpriteRenderer()
     {
         if (this.spriteRenderer != null) return;
-        this.spriteRenderer = GameObject.Find("Blockplayer").transform.GetComponent<SpriteRenderer>();
+        GameObject blockPlayer = GameObject.Find("Blockplayer");
+        if (blockPlayer != null) this.spriteRenderer = blockPlayer.GetComponent<SpriteRenderer>();
     }
     public void Attacking1()
     {
-        if (!isWorking1)
+        if (!isWorking1 && this.CanRunAttack())
         {
             StartCoroutine(DoWork1());
         }
     }
     protected IEnumerator DoWork1()
     {
+        if (!this.CanRunAttack()) yield break;
+
         this.spriteRenderer.enabled = true;
         this.collide2.enabled = true;
         this.isWorking1 = true;
         this.bossAttackCtrl.angry = true;
-        AudioManagerr.Instance.PlaySFX("MonsterBreath");
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("MonsterBreath");
 
         yield return new WaitForSeconds(5);
+        if (this.player == null || this.bossAttackCtrl == null) { this.isWorking1 = false; yield break; }
         this.disToPlayer = this.bossAttackCtrl.DistanceToTarget(this.player.position);
         this.bossAttackCtrl.angry = false;
         this.bossAttackCtrl.isMoving = true;
@@ -72,15 +78,17 @@ public class BossAttack1 : DinoBehaviourScript
         while (disToPlayer >= 1)
         {
             this.disToPlayer = this.bossAttackCtrl.DistanceToTarget(this.player.position);
-            this.bossAttackCtrl.BossCtrl.BossFlipDirect.Flipping(this.player);
-            transform.parent.parent.position = this.bossAttackCtrl.MoveToTarget(this.player.position);
+            if (this.bossAttackCtrl.BossCtrl?.BossFlipDirect != null)
+                this.bossAttackCtrl.BossCtrl.BossFlipDirect.Flipping(this.player);
+            if (transform.parent?.parent != null)
+                transform.parent.parent.position = this.bossAttackCtrl.MoveToTarget(this.player.position);
             yield return null;
         }
         this.bossAttackCtrl.isMoving = false;
 
         yield return new WaitForSeconds(0.2f);
         this.attack1 = true;
-        AudioManagerr.Instance.PlaySFX("EnemyAttack");
+        if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("EnemyAttack");
         this.collide1.enabled = true;
 
         yield return new WaitForSeconds(0.2f);
@@ -98,10 +106,16 @@ public class BossAttack1 : DinoBehaviourScript
             this.bossAttackCtrl.BossAttack2.isWorking2 = false;
         }
 
-        if (this.bossAttackCtrl.BossCtrl.BossDamReceive.Hp <= 30)
+        if (this.bossAttackCtrl.BossCtrl?.BossDamReceive != null && this.bossAttackCtrl.BossCtrl.BossDamReceive.Hp <= 30)
         {
             this.isWorking1 = false;
             this.bossAttackCtrl.BossAttack2.isWorking2 = false;
         }
+    }
+
+    private bool CanRunAttack()
+    {
+        return this.bossAttackCtrl != null && this.player != null &&
+               this.collide1 != null && this.collide2 != null && this.spriteRenderer != null;
     }
 }

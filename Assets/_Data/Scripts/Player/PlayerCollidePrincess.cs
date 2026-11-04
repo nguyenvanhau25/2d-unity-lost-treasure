@@ -8,8 +8,16 @@ public class PlayerCollidePrincess : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Princess"))
         {
-            PlayerCtrl.Instance.PlayerMovement._Rb.constraints = RigidbodyConstraints2D.FreezeAll;
-            WinToggle.Instance.WinGameMenu();
+            RescuePrincessStory rescueStory = other.GetComponent<RescuePrincessStory>();
+            if (rescueStory != null)
+            {
+                rescueStory.BeginRescue();
+                return;
+            }
+
+            if (PlayerCtrl.Instance != null && PlayerCtrl.Instance.PlayerMovement != null && PlayerCtrl.Instance.PlayerMovement._Rb != null)
+                PlayerCtrl.Instance.PlayerMovement._Rb.constraints = RigidbodyConstraints2D.FreezeAll;
+            if (WinToggle.Instance != null) WinToggle.Instance.WinGameMenu();
         }
     }
 }

@@ -118,15 +118,7 @@ Nhiệm vụ cuối cùng của người chơi là:
 ![Kho báu cuối cùng](Screenshots/final-treasure.png)
 -->
 
-## 👨‍💻 9. Thông tin nhà phát triển
-
-**Nguyễn Văn Hậu**
-
-- Ngành: Kỹ thuật phần mềm.
-- Trường: Đại học Công nghiệp Hà Nội (HaUI).
-- GitHub: [nguyenvanhau25](https://github.com/nguyenvanhau25).
-
-## 📌 10. Trạng thái dự án
+## 📌 9. Trạng thái dự án
 
 **Đang phát triển (In Progress).**
 

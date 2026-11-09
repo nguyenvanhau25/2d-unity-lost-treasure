@@ -1,15 +1,35 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Collects the LastWar map fragment when the player reaches it. The component
-/// deliberately has no required Inspector fields so it restores old scenes
-/// that already contain this GUID without extra manual setup.
+/// Collects the Key/Map fragment when the player reaches it.
+/// Automatically detects scene mapping and awards the corresponding Key Fragment
+/// to the persistent LostTreasureManager.
 /// </summary>
 public sealed class MapPieceTrigger : MonoBehaviour
 {
+    [Header("Fragment Mapping")]
+    [Tooltip("-1 for auto-detect based on Scene, or specify 0..3")]
+    [SerializeField] private int fragmentIndexOverride = -1;
     [SerializeField, Min(0f)] private float collectDelay = 0.15f;
+
     private bool collected;
+
+    private void Start()
+    {
+        int targetIndex = this.GetResolvedIndex();
+        if (targetIndex >= 0 && LostTreasureManager.Instance.HasFragment(targetIndex))
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    private int GetResolvedIndex()
+    {
+        if (this.fragmentIndexOverride >= 0) return this.fragmentIndexOverride;
+        return LostTreasureManager.GetCurrentSceneFragmentIndex();
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -17,6 +37,13 @@ public sealed class MapPieceTrigger : MonoBehaviour
 
         this.collected = true;
         if (AudioManagerr.Instance != null) AudioManagerr.Instance.PlaySFX("Pickup");
+
+        int targetIndex = this.GetResolvedIndex();
+        if (targetIndex >= 0)
+        {
+            LostTreasureManager.Instance.CollectFragment(targetIndex);
+        }
+
         StartCoroutine(this.Collect());
     }
 

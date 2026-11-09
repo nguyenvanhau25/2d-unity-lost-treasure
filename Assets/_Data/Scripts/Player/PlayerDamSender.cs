@@ -8,6 +8,12 @@ public class PlayerDamSender : DamageSender
     [SerializeField] protected PolygonCollider2D collide;
     public PolygonCollider2D Collide => collide;
 
+    protected override void Start()
+    {
+        base.Start();
+        this.damage = 5; // Buff sword strike to 5 damage
+    }
+
     protected override void LoadComponent()
     {
         base.LoadComponent();

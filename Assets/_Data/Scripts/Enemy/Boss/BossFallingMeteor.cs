@@ -21,7 +21,7 @@ public class BossFallingMeteor : MonoBehaviour
     [SerializeField] private float fallHeight = 7.5f;
 
     [Header("Impact")]
-    [SerializeField] private int damage = 5;
+    [SerializeField] private int damage = 2;
     [SerializeField] private float hitRadius = 0.62f;
     [SerializeField] private LayerMask hitMask = ~0;
 

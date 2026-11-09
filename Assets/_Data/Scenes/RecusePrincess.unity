@@ -606,8 +606,8 @@ GameObject:
   - component: {fileID: 97295376}
   - component: {fileID: 97295377}
   m_Layer: 0
-  m_Name: Princess
-  m_TagString: Princess
+  m_Name: CursedTempleExitAltar
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -687,11 +687,10 @@ MonoBehaviour:
   m_Name: ""
   m_EditorClassIdentifier: Assembly-CSharp::RescuePrincessStory
   specialSceneName: Special
-  princessLine: "Cảm ơn ngươi... nhưng kho báu vẫn chưa thực sự yên bình."
-  abductionLine: "Một luồng bóng tối cuốn công chúa vào cánh cổng bí ẩn!"
-  objectiveLine: "Mục tiêu mới: Đến vùng đất đặc biệt và giải cứu công chúa."
-  messageDuration: 2.3
-  disappearDuration: 0.5
+  guardianLine: "Ngươi đã vượt qua những cạm bẫy cổ xưa và tìm ra Đền Thờ Bị Nguyền Rủa. Guardian đã nhận ra bản lĩnh của ngươi."
+  abductionLine: "Phong ấn đền thờ đang tan vỡ. Cánh cửa đến Cấm Địa cuối cùng đã mở."
+  objectiveLine: "Tiến vào Cấm Địa, đánh bại các hộ vệ cuối cùng và dùng Chìa Khóa Hoàn Chỉnh để mở Rương Kho Báu Thất Lạc."
+  messageDuration: 2.8
 --- !u!1 &111735225
 GameObject:
   m_ObjectHideFlags: 0

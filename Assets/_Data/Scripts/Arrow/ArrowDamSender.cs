@@ -10,6 +10,7 @@ public class ArrowDamSender : DamageSender
     protected override void LoadComponent()
     {
         base.LoadComponent();
+        this.damage = 4; // Buff arrow to 4 damage
         this.LoadArrowCtrl();
     }
     protected void LoadArrowCtrl()

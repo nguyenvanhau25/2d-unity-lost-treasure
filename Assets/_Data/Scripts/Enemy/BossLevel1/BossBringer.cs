@@ -76,6 +76,16 @@ public class BossBringer : DamageReceiver
     protected override void Start()
     {
         base.Start();
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Special")
+        {
+            this.attackDamage = 1;
+            this.bulletDamage = 1;
+            this.maxHealth = 20;
+            this.hp = 20;
+            this.hpMax = 20;
+            this.attackHitTime = 0.65f;
+            this.attackCooldown = 1.1f;
+        }
         GameObject player = GameObject.Find("Player");
         if (player != null) this.target = player.transform;
         this.UpdateHealthBar();

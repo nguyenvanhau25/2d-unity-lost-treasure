@@ -10,6 +10,7 @@ public class DisplayGoalTutorial : DinoBehaviourScript
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            if (this.notificationEffect != null) this.notificationEffect.HideNotification();
             if (UIGoalTutorial.Instance != null) UIGoalTutorial.Instance.Open();
         }
     }
@@ -19,7 +20,7 @@ public class DisplayGoalTutorial : DinoBehaviourScript
         if (other.gameObject.CompareTag("Player"))
         {
             if (UIGoalTutorial.Instance != null) UIGoalTutorial.Instance.Close();
-            if (notificationEffect != null) notificationEffect.HideNotification();
+            if (this.notificationEffect != null) this.notificationEffect.ShowNotification();
             if (arrowFollow1 != null) arrowFollow1.SetActive(false);
         }
     }

@@ -2816,7 +2816,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Fragments of Treasure
+  m_text: Lost Treasure
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0548de6a160ec4b40bf3466ea50f5496, type: 2}
   m_sharedMaterial: {fileID: 2246802988454726019, guid: 0548de6a160ec4b40bf3466ea50f5496, type: 2}

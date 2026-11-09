@@ -66,6 +66,16 @@ public class BossLevel1 : MonoBehaviour
 
     private void Start()
     {
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Special")
+        {
+            this.contactDamage = 1;
+            this.maxHealth = 20;
+            this.currentHealth = 20;
+            this.timeRandomSkill = 3.5f;
+            this.bulletSpeedNormal = 12f;
+            this.bulletSpeedAround = 7f;
+            this.bulletsAroundCount = 8;
+        }
         if (this.hPSlider != null)
         {
             this.hPSlider.maxValue = this.maxHealth;

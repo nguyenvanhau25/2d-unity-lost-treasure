@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +13,37 @@ public class SceneTransition : DinoBehaviourScript
     [SerializeField] protected Inventory inventory;
     [SerializeField] protected Animator transAnim;
     protected bool isTransitioning;
+    public string DestinationSceneName => this.sceneName.ToString();
+
+    protected override void Start()
+    {
+        base.Start();
+        if (this.sceneName == SceneName.MainMenu || this.sceneName == SceneName.BeginScreen) return;
+
+        GameObject marker = new GameObject("StageExitMarker");
+        marker.transform.SetParent(transform, false);
+        marker.transform.localPosition = Vector3.up * 2.2f;
+        TextMeshPro label = marker.AddComponent<TextMeshPro>();
+        label.text = $"CỔNG SANG\n{this.GetDestinationLabel()}\nĐi vào cổng để tiếp tục";
+        label.fontSize = 2.2f;
+        label.alignment = TextAlignmentOptions.Center;
+        label.color = new Color(1f, 0.86f, 0.42f);
+        label.sortingOrder = 30;
+        marker.transform.localScale = Vector3.one * 0.55f;
+    }
+
+    private string GetDestinationLabel()
+    {
+        switch (this.sceneName.ToString())
+        {
+            case "DarkForestScene": return "Rừng Hắc Ám";
+            case "InsideCave": return "Hang Động";
+            case "LastWar": return "Chiến Trường";
+            case "RecusePrincess": return "Đền Cổ";
+            case "Special": return "Cấm Địa";
+            default: return this.sceneName.ToString();
+        }
+    }
     protected override void LoadComponent()
     {
         base.LoadComponent();

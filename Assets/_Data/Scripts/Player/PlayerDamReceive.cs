@@ -16,9 +16,21 @@ public class PlayerDamReceive : DamageReceiver
     protected override void Start()
     {
         base.Start();
-        if (this.playerHpSO == null) return;
-        this.hp = this.playerHpSO.currentHp;
-        this.playerHpMax = this.playerHpSO.maxHp;
+        if (this.playerHpSO != null)
+        {
+            this.playerHpSO.maxHp = Mathf.Max(this.playerHpSO.maxHp, 35);
+            if (this.playerHpSO.currentHp <= 0) this.playerHpSO.currentHp = this.playerHpSO.maxHp;
+            this.hp = this.playerHpSO.currentHp;
+            this.playerHpMax = this.playerHpSO.maxHp;
+            this.hpMax = this.playerHpMax;
+        }
+        else
+        {
+            this.hp = 35;
+            this.playerHpMax = 35;
+            this.hpMax = 35;
+        }
+        this.hurtTime = 0.85f;
     }
     protected override void LoadComponent()
     {

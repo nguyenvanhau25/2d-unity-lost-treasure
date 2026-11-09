@@ -47,8 +47,8 @@ public class SpecialCastleGate : MonoBehaviour
         if (!this.unlocked || this.castleReached || other == null) return;
         if (other.GetComponentInParent<PlayerCtrl>() == null) return;
 
+        if (this.battleFlow != null && !this.battleFlow.ReachCastle()) return;
         this.castleReached = true;
-        this.battleFlow?.ReachCastle();
     }
 
     private IEnumerator PulseCastle()

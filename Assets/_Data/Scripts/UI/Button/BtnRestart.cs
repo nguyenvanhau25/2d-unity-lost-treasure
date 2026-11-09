@@ -57,6 +57,10 @@ public class BtnRestart : BaseButton
     }
     protected void ResetValues()
     {
+        if (LostTreasureManager.Instance != null && this.sceneName == SceneName.ForestStartScene)
+        {
+            LostTreasureManager.Instance.ResetProgress();
+        }
         this.arrowSO.arrowCounts = this.arrowSO.defaultArrowCounts;
         this.hpPotionSO.hpPotionCount = this.hpPotionSO.defaultHpPotionCount;
         this.playerHpSO.currentHp = this.playerHpSO.maxHp;

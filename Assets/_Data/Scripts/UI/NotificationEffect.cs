@@ -1,16 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
 /// Notification luôn hoạt động cho tới khi gọi HideNotification().
-///
-/// - Text chạy từng ký tự liên tục.
-/// - Chạy hết câu -> bắt đầu lại từ đầu.
-/// - Bell nhấp nháy liên tục.
-/// - Không tự ẩn.
-/// - Gọi HideNotification() từ script khác để tắt.
+/// Styled with an attractive golden RPG dialogue frame.
 /// </summary>
 public class NotificationEffect : MonoBehaviour
 {
@@ -21,7 +16,7 @@ public class NotificationEffect : MonoBehaviour
 
     [Header("Notification Text")]
     [TextArea(2, 5)]
-    [SerializeField] private string message = "New Text";
+    [SerializeField] private string message = "Bản đồ cổ đã thức tỉnh! Hãy khám phá rừng, né cạm bẫy và tìm Mảnh Chìa Khóa Cổ để mở đường!";
 
     [SerializeField] private float typingSpeed = 0.05f;
     [SerializeField] private float startDelay = 0.1f;
@@ -44,11 +39,18 @@ public class NotificationEffect : MonoBehaviour
 
     private void Awake()
     {
+        if (this.message == "có chuyện gì" || string.IsNullOrEmpty(this.message))
+        {
+            this.message = "Bản đồ cổ đã thức tỉnh! Hãy khám phá rừng, né cạm bẫy và tìm Mảnh Chìa Khóa Cổ để mở đường!";
+        }
+
         if (notificationPanel == null)
             notificationPanel = gameObject;
 
         if (notificationText == null)
             notificationText = GetComponentInChildren<TMP_Text>(true);
+
+        this.StyleNotificationFrame();
 
         panelCanvasGroup = notificationPanel.GetComponent<CanvasGroup>();
         if (panelCanvasGroup == null)
@@ -58,11 +60,55 @@ public class NotificationEffect : MonoBehaviour
         if (bellIcon != null)
         {
             bellOriginalScale = bellIcon.transform.localScale;
-
             bellCanvasGroup = bellIcon.GetComponent<CanvasGroup>();
-
             if (bellCanvasGroup == null)
                 bellCanvasGroup = bellIcon.gameObject.AddComponent<CanvasGroup>();
+        }
+    }
+
+    private void StyleNotificationFrame()
+    {
+        if (this.notificationPanel == null) return;
+
+        // Ensure background image frame exists
+        Image bg = this.notificationPanel.GetComponent<Image>();
+        if (bg == null)
+        {
+            bg = this.notificationPanel.AddComponent<Image>();
+        }
+        bg.color = new Color(0.08f, 0.1f, 0.14f, 0.94f);
+
+        // Ensure gold border exists
+        Outline border = this.notificationPanel.GetComponent<Outline>();
+        if (border == null)
+        {
+            border = this.notificationPanel.AddComponent<Outline>();
+        }
+        border.effectColor = new Color(1f, 0.82f, 0.28f, 0.9f);
+        border.effectDistance = new Vector2(2.5f, -2.5f);
+
+        // Adjust dimensions and padding
+        RectTransform rect = this.notificationPanel.GetComponent<RectTransform>();
+        if (rect != null)
+        {
+            rect.sizeDelta = new Vector2(Mathf.Max(rect.sizeDelta.x, 560f), Mathf.Max(rect.sizeDelta.y, 68f));
+        }
+
+        if (this.notificationText != null)
+        {
+            this.notificationText.fontSize = 13.5f;
+            this.notificationText.color = new Color(1f, 0.95f, 0.75f, 1f);
+            this.notificationText.textWrappingMode = TextWrappingModes.Normal;
+            this.notificationText.alignment = TextAlignmentOptions.MidlineLeft;
+
+            RectTransform textRect = this.notificationText.rectTransform;
+            if (textRect != null)
+            {
+                textRect.anchorMin = new Vector2(0.12f, 0.05f);
+                textRect.anchorMax = new Vector2(0.96f, 0.95f);
+                textRect.anchoredPosition = Vector2.zero;
+                textRect.sizeDelta = Vector2.zero;
+            }
         }
     }
 
@@ -71,48 +117,27 @@ public class NotificationEffect : MonoBehaviour
         ShowNotification();
     }
 
-    /// <summary>
-    /// Hiện notification và bắt đầu chạy hiệu ứng.
-    /// Text sẽ chạy vô hạn cho tới khi HideNotification() được gọi.
-    /// </summary>
     public void ShowNotification()
     {
+        if (this.message == "có chuyện gì" || string.IsNullOrEmpty(this.message))
+        {
+            this.message = "Bản đồ cổ đã thức tỉnh! Hãy khám phá rừng, né cạm bẫy và tìm Mảnh Chìa Khóa Cổ để mở đường!";
+        }
+
         if (notificationPanel == null)
             return;
 
         notificationPanel.SetActive(true);
 
         StopCurrentAnimations();
+
         panelIntroCoroutine = StartCoroutine(PlayPanelIntro());
+        typingCoroutine = StartCoroutine(TypeTextLoop());
 
-        // =========================
-        // TEXT CHẠY VÔ HẠN
-        // =========================
-        if (notificationText != null)
-        {
-            notificationText.text = string.Empty;
-            typingCoroutine = StartCoroutine(TypeTextLoop());
-        }
-
-        // =========================
-        // BELL CHẠY VÔ HẠN
-        // =========================
         if (bellIcon != null)
-        {
-            bellIcon.gameObject.SetActive(true);
-            bellIcon.transform.localScale = bellOriginalScale;
-
-            if (bellCanvasGroup != null)
-                bellCanvasGroup.alpha = maxAlpha;
-
-            blinkCoroutine = StartCoroutine(BlinkBellRoutine());
-        }
+            blinkCoroutine = StartCoroutine(BlinkBellLoop());
     }
 
-    /// <summary>
-    /// Tắt notification ngay lập tức.
-    /// Có thể gọi từ OnTriggerExit2D().
-    /// </summary>
     public void HideNotification()
     {
         StopCurrentAnimations();
@@ -132,17 +157,6 @@ public class NotificationEffect : MonoBehaviour
             notificationPanel.SetActive(false);
     }
 
-    /// <summary>
-    /// Text chạy liên tục:
-    ///
-    /// New Text
-    /// -> hết
-    /// -> xóa
-    /// -> New Text
-    /// -> hết
-    /// -> xóa
-    /// -> lặp vô hạn
-    /// </summary>
     private IEnumerator TypeTextLoop()
     {
         if (startDelay > 0f)
@@ -153,10 +167,8 @@ public class NotificationEffect : MonoBehaviour
             if (notificationText == null)
                 yield break;
 
-            // Xóa text trước mỗi lần chạy
             notificationText.text = string.Empty;
 
-            // Chạy từng ký tự
             foreach (char character in message)
             {
                 notificationText.text += character;
@@ -167,48 +179,25 @@ public class NotificationEffect : MonoBehaviour
                     yield return null;
             }
 
-            // Chờ một chút sau khi chạy hết câu
             if (repeatDelay > 0f)
                 yield return new WaitForSecondsRealtime(repeatDelay);
-
-            // Sau đó vòng while chạy lại từ đầu
         }
     }
 
-    /// <summary>
-    /// Bell nhấp nháy liên tục.
-    /// </summary>
-    private IEnumerator BlinkBellRoutine()
+    private IEnumerator BlinkBellLoop()
     {
-        if (bellIcon == null)
-            yield break;
-
-        float time = 0f;
+        float timer = 0f;
 
         while (true)
         {
-            time += Time.unscaledDeltaTime * blinkSpeed;
-
-            float pingPong =
-                (Mathf.Sin(time * Mathf.PI) + 1f) * 0.5f;
+            timer += Time.unscaledDeltaTime * blinkSpeed;
+            float wave = (Mathf.Sin(timer) + 1f) * 0.5f;
 
             if (bellCanvasGroup != null)
-            {
-                bellCanvasGroup.alpha = Mathf.Lerp(
-                    minAlpha,
-                    maxAlpha,
-                    pingPong
-                );
-            }
+                bellCanvasGroup.alpha = Mathf.Lerp(minAlpha, maxAlpha, wave);
 
-            float scale = Mathf.Lerp(
-                1f,
-                pulseScale,
-                pingPong
-            );
-
-            bellIcon.transform.localScale =
-                bellOriginalScale * scale;
+            float currentScale = Mathf.Lerp(1f, pulseScale, wave);
+            bellIcon.transform.localScale = bellOriginalScale * currentScale;
 
             yield return null;
         }
@@ -216,28 +205,42 @@ public class NotificationEffect : MonoBehaviour
 
     private IEnumerator PlayPanelIntro()
     {
-        if (panelCanvasGroup == null) yield break;
+        float duration = 0.2f;
+        float elapsed = 0f;
 
-        const float duration = 0.2f;
-        panelCanvasGroup.alpha = 0f;
-        notificationPanel.transform.localScale = panelOriginalScale * 0.92f;
+        Vector3 startScale = panelOriginalScale * 0.9f;
 
-        for (float elapsed = 0f; elapsed < duration; elapsed += Time.unscaledDeltaTime)
+        if (panelCanvasGroup != null)
+            panelCanvasGroup.alpha = 0f;
+
+        notificationPanel.transform.localScale = startScale;
+
+        while (elapsed < duration)
         {
-            float progress = elapsed / duration;
-            float eased = 1f - Mathf.Pow(1f - progress, 3f);
-            panelCanvasGroup.alpha = eased;
-            notificationPanel.transform.localScale = Vector3.Lerp(panelOriginalScale * 0.92f, panelOriginalScale, eased);
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            if (panelCanvasGroup != null)
+                panelCanvasGroup.alpha = t;
+
+            notificationPanel.transform.localScale = Vector3.Lerp(startScale, panelOriginalScale, t);
             yield return null;
         }
 
-        panelCanvasGroup.alpha = 1f;
+        if (panelCanvasGroup != null)
+            panelCanvasGroup.alpha = 1f;
+
         notificationPanel.transform.localScale = panelOriginalScale;
-        panelIntroCoroutine = null;
     }
 
     private void StopCurrentAnimations()
     {
+        if (panelIntroCoroutine != null)
+        {
+            StopCoroutine(panelIntroCoroutine);
+            panelIntroCoroutine = null;
+        }
+
         if (typingCoroutine != null)
         {
             StopCoroutine(typingCoroutine);
@@ -248,30 +251,6 @@ public class NotificationEffect : MonoBehaviour
         {
             StopCoroutine(blinkCoroutine);
             blinkCoroutine = null;
-        }
-        if (panelIntroCoroutine != null)
-        {
-            StopCoroutine(panelIntroCoroutine);
-            panelIntroCoroutine = null;
-        }
-    }
-
-    private void OnDisable()
-    {
-        StopCurrentAnimations();
-
-        if (bellIcon != null)
-        {
-            bellIcon.transform.localScale = bellOriginalScale;
-
-            if (bellCanvasGroup != null)
-                bellCanvasGroup.alpha = maxAlpha;
-        }
-
-        if (notificationPanel != null)
-        {
-            notificationPanel.transform.localScale = panelOriginalScale;
-            if (panelCanvasGroup != null) panelCanvasGroup.alpha = 1f;
         }
     }
 }

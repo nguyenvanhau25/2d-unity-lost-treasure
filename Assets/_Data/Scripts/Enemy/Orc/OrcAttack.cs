@@ -9,6 +9,16 @@ public class OrcAttack : EnemyAttack
     [SerializeField] protected float orcDisAttackLimit = 2f;
     [SerializeField] protected float orcAttackTime = 0.5f;
     [SerializeField] protected float orcAttackCoolDown = 2f;
+
+    public void ApplyDarkForestBalance()
+    {
+        this.orcDisAttackLimit = 1.35f;
+        this.orcAttackTime = 0.3f;
+        this.orcAttackCoolDown = 3.2f;
+        this.disAttackLimit = this.orcDisAttackLimit;
+        this.attackTime = this.orcAttackTime;
+        this.attackCoolDown = this.orcAttackCoolDown;
+    }
     protected override void ResetValue()
     {
         base.ResetValue();

@@ -125,10 +125,25 @@ public class SceneStoryOverlay : MonoBehaviour
         this.bodyText.textWrappingMode = TextWrappingModes.Normal;
     }
 
+    public static void DismissActive()
+    {
+        SceneStoryOverlay existing = FindFirstObjectByType<SceneStoryOverlay>(FindObjectsInactive.Include);
+        if (existing != null && existing.gameObject.activeSelf)
+        {
+            existing.StopAllCoroutines();
+            if (existing.canvasGroup != null) existing.canvasGroup.alpha = 0f;
+            existing.gameObject.SetActive(false);
+        }
+    }
+
     private static TMP_FontAsset GetDefaultFont()
     {
+        if (TMP_Settings.defaultFontAsset != null)
+        {
+            return TMP_Settings.defaultFontAsset;
+        }
         TextMeshProUGUI sampleText = FindFirstObjectByType<TextMeshProUGUI>();
-        return sampleText != null ? sampleText.font : TMP_Settings.defaultFontAsset;
+        return sampleText != null ? sampleText.font : null;
     }
 
     private static Image CreateImage(Transform parent, string objectName, Color color)

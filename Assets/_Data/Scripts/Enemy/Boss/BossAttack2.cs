@@ -144,12 +144,17 @@ public class BossAttack2 : DinoBehaviourScript
         if (this.sprite != null) this.sprite.color = Color.white;
         this.RestoreWarningZonePosition();
         if (this.collide != null) this.collide.enabled = false;
+
+        yield return new WaitForSeconds(1.8f);
         this.bossAttackCtrl.attackCount = 0;
         this.isWorking2 = true;
 
         // Chuyển kĩ năng 
         if (this.bossAttackCtrl.BossAttack1 != null) this.bossAttackCtrl.BossAttack1.isWorking1 = false;
-        if (this.bossAttackCtrl.BossCtrl?.BossDamReceive != null && this.bossAttackCtrl.BossCtrl.BossDamReceive.Hp <= 30)
+        int phaseTwoThreshold = this.bossAttackCtrl.BossCtrl?.BossDamReceive != null
+            ? Mathf.Max(10, this.bossAttackCtrl.BossCtrl.BossDamReceive.HPMax / 2)
+            : 14;
+        if (this.bossAttackCtrl.BossCtrl?.BossDamReceive != null && this.bossAttackCtrl.BossCtrl.BossDamReceive.Hp <= phaseTwoThreshold)
             this.isWorking2 = false;
 
     }

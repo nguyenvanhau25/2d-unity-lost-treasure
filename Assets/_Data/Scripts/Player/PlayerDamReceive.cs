@@ -18,17 +18,17 @@ public class PlayerDamReceive : DamageReceiver
         base.Start();
         if (this.playerHpSO != null)
         {
-            this.playerHpSO.maxHp = Mathf.Max(this.playerHpSO.maxHp, 35);
-            if (this.playerHpSO.currentHp <= 0) this.playerHpSO.currentHp = this.playerHpSO.maxHp;
+            this.playerHpSO.maxHp = Mathf.Max(this.playerHpSO.maxHp, 45);
+            if (this.playerHpSO.currentHp <= 15) this.playerHpSO.currentHp = this.playerHpSO.maxHp;
             this.hp = this.playerHpSO.currentHp;
             this.playerHpMax = this.playerHpSO.maxHp;
             this.hpMax = this.playerHpMax;
         }
         else
         {
-            this.hp = 35;
-            this.playerHpMax = 35;
-            this.hpMax = 35;
+            this.hp = 45;
+            this.playerHpMax = 45;
+            this.hpMax = 45;
         }
         this.hurtTime = 0.85f;
     }
@@ -80,6 +80,8 @@ public class PlayerDamReceive : DamageReceiver
 
     public override void Deduct(int damage)
     {
+        if (this.isDead || this.isHurt || damage <= 0) return;
+        this.hurtTimeCounter = 0f;
         int previousHp = this.hp;
         base.Deduct(damage);
         if (this.hp >= previousHp) return;

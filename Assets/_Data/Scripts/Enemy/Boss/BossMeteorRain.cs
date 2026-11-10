@@ -81,7 +81,7 @@ public class BossMeteorRain : MonoBehaviour
         if (Time.time < nextSpawnTime) return;
 
         SpawnMeteor();
-        nextSpawnTime = Time.time + Mathf.Max(0.08f, spawnInterval);
+        nextSpawnTime = Time.time + Mathf.Max(0.35f, spawnInterval);
     }
 
     private void SpawnMeteor()

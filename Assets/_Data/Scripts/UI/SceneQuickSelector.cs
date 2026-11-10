@@ -143,13 +143,29 @@ public sealed class SceneQuickSelector : MonoBehaviour
         int selectedIndex = 0;
         string activePath = SceneManager.GetActiveScene().path;
 
+        List<string> rawPaths = new List<string>();
         for (int index = 0; index < SceneManager.sceneCountInBuildSettings; index++)
         {
             string scenePath = SceneUtility.GetScenePathByBuildIndex(index);
-            if (string.IsNullOrWhiteSpace(scenePath)) continue;
+            if (!string.IsNullOrWhiteSpace(scenePath))
+            {
+                rawPaths.Add(scenePath);
+            }
+        }
 
+        rawPaths.Sort((a, b) =>
+        {
+            string nameA = Path.GetFileNameWithoutExtension(a);
+            string nameB = Path.GetFileNameWithoutExtension(b);
+            return LostTreasureSceneHelper.GetStageOrder(nameA).CompareTo(LostTreasureSceneHelper.GetStageOrder(nameB));
+        });
+
+        for (int i = 0; i < rawPaths.Count; i++)
+        {
+            string scenePath = rawPaths[i];
+            string rawName = Path.GetFileNameWithoutExtension(scenePath);
             this.scenePaths.Add(scenePath);
-            options.Add(new TMP_Dropdown.OptionData(Path.GetFileNameWithoutExtension(scenePath)));
+            options.Add(new TMP_Dropdown.OptionData(LostTreasureSceneHelper.GetMapDisplayName(rawName)));
             if (scenePath == activePath) selectedIndex = this.scenePaths.Count - 1;
         }
 

@@ -17,7 +17,7 @@ public class AudioManagerr : DinoBehaviourScript
     {
         base.Start();
         this.ClockMusic();
-        if (SceneManager.GetActiveScene().name == "InsideCave")
+        if (LostTreasureSceneHelper.IsAncientCave(SceneManager.GetActiveScene().name))
         {
             OpenMusic();
             PlayMusic("MusicInsideCave");

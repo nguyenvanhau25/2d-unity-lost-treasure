@@ -20,7 +20,17 @@ public class ArrowDamSender : DamageSender
     }
     protected override void SendToTransform(Transform collider)
     {
+        AncientRunePillar runePillar = collider.GetComponent<AncientRunePillar>();
+        if (runePillar == null) runePillar = collider.GetComponentInParent<AncientRunePillar>();
+        if (runePillar != null)
+        {
+            runePillar.ActivateRune();
+            this.arrowCtrl.ArrowDespawn.DespawnObj();
+            return;
+        }
+
         BossLevel1 darkForestBoss = collider.GetComponent<BossLevel1>();
+        if (darkForestBoss == null) darkForestBoss = collider.GetComponentInParent<BossLevel1>();
 
         if (darkForestBoss != null)
         {
@@ -30,6 +40,15 @@ public class ArrowDamSender : DamageSender
         else
         {
             base.SendToTransform(collider);
+            if (!this.canSendDamage && collider.CompareTag("Enemy"))
+            {
+                DamageReceiver receiver = collider.GetComponentInChildren<DamageReceiver>();
+                if (receiver != null && !(receiver is PlayerDamReceive))
+                {
+                    this.canSendDamage = true;
+                    this.SendToDamReceive(receiver);
+                }
+            }
         }
 
         if (!this.canSendDamage) return;

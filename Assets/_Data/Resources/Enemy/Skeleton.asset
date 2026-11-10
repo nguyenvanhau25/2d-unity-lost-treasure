@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Skeleton
   m_EditorClassIdentifier: 
   enemyName: Skeleton
-  hpMax: 7
+  hpMax: 5
   dropList:
   - itemSO: {fileID: 11400000, guid: 5409c3d4ca470844086405a1d5dffad8, type: 2}
     dropRate: 0

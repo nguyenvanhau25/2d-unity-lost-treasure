@@ -42,7 +42,7 @@ public class PlayerTreasureResonance : MonoBehaviour
     {
         this.playerCtrl = GetComponent<PlayerCtrl>();
         string sceneName = SceneManager.GetActiveScene().name;
-        this.unlocked = sceneName == SceneName.LastWar.ToString() || sceneName == "Special";
+        this.unlocked = LostTreasureSceneHelper.IsGuardianBattlefield(sceneName) || LostTreasureSceneHelper.IsTreasureSanctum(sceneName);
         if (!this.unlocked) enabled = false;
     }
 

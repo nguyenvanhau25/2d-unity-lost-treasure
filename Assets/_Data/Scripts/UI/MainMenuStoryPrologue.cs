@@ -64,6 +64,7 @@ public class MainMenuStoryPrologue : MonoBehaviour
         titleRect.sizeDelta = Vector2.zero;
 
         TextMeshProUGUI titleText = titleObj.GetComponent<TextMeshProUGUI>();
+        if (TMP_Settings.defaultFontAsset != null) titleText.font = TMP_Settings.defaultFontAsset;
         titleText.text = "✦ BỐI CẢNH: BẢN ĐỒ KHO BÁU THẤT LẠC ✦";
         titleText.fontSize = 18f;
         titleText.fontStyle = FontStyles.Bold;
@@ -80,6 +81,7 @@ public class MainMenuStoryPrologue : MonoBehaviour
         bodyRect.sizeDelta = Vector2.zero;
 
         TextMeshProUGUI bodyText = bodyObj.GetComponent<TextMeshProUGUI>();
+        if (TMP_Settings.defaultFontAsset != null) bodyText.font = TMP_Settings.defaultFontAsset;
         bodyText.text = "Tại một phế tích hoang tàn, bạn vô tình nhặt được một tấm <color=#FFDD55>Bản Đồ Da Thú Cổ Xưa</color> đã nhuốm màu thời gian.\n\n"
                       + "Bản đồ chỉ lối qua <b>4 vùng đất hiểm trở</b>, nơi cất giữ <b>4 Mảnh Chìa Khóa Cổ</b>. Hãy vượt qua cạm bẫy, giải mã cơ quan, đánh bại các Hộ Vệ Thần để ghép thành <color=#FFDD55>Chìa Khóa Hoàn Chỉnh</color> và mở <color=#FFAA33>Rương Kho Báu Bí Ẩn</color>!";
         bodyText.fontSize = 14f;
@@ -111,7 +113,8 @@ public class MainMenuStoryPrologue : MonoBehaviour
         btnTextRect.sizeDelta = Vector2.zero;
 
         TextMeshProUGUI btnText = btnTextObj.GetComponent<TextMeshProUGUI>();
-        btnText.text = "BẮT ĐẦU HÀNH TRÌNH ▶";
+        if (TMP_Settings.defaultFontAsset != null) btnText.font = TMP_Settings.defaultFontAsset;
+        btnText.text = "NHẬN BẢN ĐỒ & KHỞI HÀNH ▶";
         btnText.fontSize = 15f;
         btnText.fontStyle = FontStyles.Bold;
         btnText.alignment = TextAlignmentOptions.Center;

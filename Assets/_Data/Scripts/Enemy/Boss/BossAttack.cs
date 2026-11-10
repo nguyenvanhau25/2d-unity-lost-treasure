@@ -27,7 +27,8 @@ public class BossAttack : DinoBehaviourScript
         if (PlayerCtrl.Instance?.PlayerDamReceive == null || this.bossAttackCtrl?.BossCtrl?.BossDamReceive == null) return;
         if (PlayerCtrl.Instance.PlayerDamReceive.IsDead) return;
         if (this.bossAttackCtrl.BossCtrl.BossDamReceive.IsDead) return;
-        if (this.bossAttackCtrl.BossCtrl.BossDamReceive.Hp > 30)
+        int phaseTwoThreshold = Mathf.Max(10, this.bossAttackCtrl.BossCtrl.BossDamReceive.HPMax / 2);
+        if (this.bossAttackCtrl.BossCtrl.BossDamReceive.Hp > phaseTwoThreshold)
         {
             this.bossAttackCtrl.BossAttack1?.Attacking1();
             this.bossAttackCtrl.BossAttack2?.Attacking2();

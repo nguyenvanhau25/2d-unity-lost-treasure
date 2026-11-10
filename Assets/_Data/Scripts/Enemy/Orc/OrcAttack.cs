@@ -6,9 +6,18 @@ public class OrcAttack : EnemyAttack
 {
     [Header("Orc Attack")]
     [SerializeField] protected Transform enemyDamSender;
-    [SerializeField] protected float orcDisAttackLimit = 2f;
-    [SerializeField] protected float orcAttackTime = 0.5f;
-    [SerializeField] protected float orcAttackCoolDown = 2f;
+    [SerializeField] protected float orcDisAttackLimit = 1.65f;
+    [SerializeField] protected float orcAttackTime = 0.4f;
+    [SerializeField] protected float orcAttackCoolDown = 2.8f;
+
+    protected override void Start()
+    {
+        base.Start();
+        this.orcDisAttackLimit = Mathf.Min(this.orcDisAttackLimit, 1.65f);
+        this.orcAttackCoolDown = Mathf.Max(this.orcAttackCoolDown, 2.8f);
+        this.disAttackLimit = this.orcDisAttackLimit;
+        this.attackCoolDown = this.orcAttackCoolDown;
+    }
 
     public void ApplyDarkForestBalance()
     {

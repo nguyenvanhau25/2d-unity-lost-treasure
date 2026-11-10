@@ -15,7 +15,14 @@ public class BossAttackCtrl : DinoBehaviourScript
     public bool angry;
     public bool isMoving = false;
     public int attackCount = 0;
-    public float speed = 20;
+    public float speed = 7.2f;
+
+    protected override void Start()
+    {
+        base.Start();
+        bool isSpecialScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Special";
+        this.speed = Mathf.Min(this.speed, isSpecialScene ? 6.5f : 7.5f);
+    }
     protected override void LoadComponent()
     {
         base.LoadComponent();

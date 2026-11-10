@@ -39,6 +39,11 @@ public class SpecialBattleFlow : MonoBehaviour
 
     private void Start()
     {
+        this.waveOneMessage = "Hộ vệ bóng tối cổ xưa đã thức tỉnh!\nHãy tiêu diệt chúng để phá giải tầng phong ấn thứ nhất!";
+        this.waveTwoMessage = "Đợt 2 bắt đầu — Đại Hộ Vệ Kho Báu xuất hiện!\nTận dụng sơ hở sau mỗi đòn lao để phản công!";
+        this.castleObjective = "Tất cả hộ vệ bóng tối đã bị đánh bại!\nHãy tiến lên phía Bắc, ghép Chìa Khóa Cổ Đại và mở Rương Kho Báu Thất Lạc!";
+        this.princessFinalLine = "Lời nguyền ngàn năm đã tan biến! Kho báu thất lạc đã tìm được chủ nhân xứng đáng.";
+
         this.SetWaveActive(this.waveOneEnemies, false);
         this.SetWaveActive(this.waveTwoEnemies, false);
         this.castleGate?.LockGate();
@@ -52,12 +57,27 @@ public class SpecialBattleFlow : MonoBehaviour
         yield return this.ShowBanner("ĐỢT 1 - HỘ VỆ PHONG ẤN", this.waveOneMessage, new Color(1f, 0.76f, 0.24f));
         yield return this.ActivateAndWaitForClear(this.waveOneEnemies);
 
-        yield return new WaitForSeconds(this.phaseBreakDuration);
+        if (PlayerCtrl.Instance != null && PlayerCtrl.Instance.PlayerDamReceive != null)
+        {
+            PlayerCtrl.Instance.PlayerDamReceive.Add(15);
+        }
+
+        yield return new WaitForSeconds(Mathf.Max(1.2f, this.phaseBreakDuration));
         yield return this.ShowBanner("ĐỢT 2 - ĐẠI HỘ VỆ TỐI THƯỢNG", this.waveTwoMessage, new Color(1f, 0.35f, 0.38f));
         yield return this.ActivateAndWaitForClear(this.waveTwoEnemies);
 
         this.battleFinished = true;
         if (AudioManagerr.Instance != null) AudioManagerr.Instance.StopMusic();
+
+        if (LostTreasureManager.Instance != null && !LostTreasureManager.Instance.IsMasterKeyCrafted)
+        {
+            for (int i = 0; i < LostTreasureManager.TotalRequiredFragments; i++)
+            {
+                if (!LostTreasureManager.Instance.HasFragment(i))
+                    LostTreasureManager.Instance.CollectFragment(i);
+            }
+        }
+
         this.castleGate?.OpenGate();
         yield return this.ShowBanner("CỔNG ĐỀN KHO BÁU ĐÃ MỞ", this.castleObjective, new Color(1f, 0.85f, 0.32f));
     }
@@ -73,16 +93,20 @@ public class SpecialBattleFlow : MonoBehaviour
 
         this.castleReached = true;
 
-        // Check if MysteryTreasureChest exists in scene
+        // Ensure MysteryTreasureChest exists on top of the Ancient Tower so real treasure always appears
         MysteryTreasureChest chest = FindFirstObjectByType<MysteryTreasureChest>();
-        if (chest != null)
+        if (chest == null)
         {
-            chest.OpenChest();
+            GameObject chestObj = new GameObject("MysteryTreasureChest");
+            chestObj.transform.position = new Vector3(0.36f, 17.35f, 0f);
+            BoxCollider2D col = chestObj.AddComponent<BoxCollider2D>();
+            col.offset = new Vector2(0f, -1.25f);
+            col.size = new Vector2(4.2f, 3.8f);
+            col.isTrigger = true;
+            chest = chestObj.AddComponent<MysteryTreasureChest>();
         }
-        else
-        {
-            StartCoroutine(this.RunFinale());
-        }
+
+        chest.OpenChest();
 
         return true;
     }

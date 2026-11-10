@@ -53,7 +53,7 @@ public class BtnRestart : BaseButton
     }
     protected void BackFirstScene()
     {
-        SceneManager.LoadScene(sceneName.ToString());
+        SceneManager.LoadScene(LostTreasureSceneHelper.ResolveLoadableSceneName(sceneName));
     }
     protected void ResetValues()
     {

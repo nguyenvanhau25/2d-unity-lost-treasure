@@ -95,7 +95,7 @@ public class BossAttack1 : DinoBehaviourScript
         this.attack1 = false;
         this.collide1.enabled = false;
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2.0f);
         this.isWorking1 = false;
         this.bossAttackCtrl.attackCount += 1;
 
@@ -106,7 +106,10 @@ public class BossAttack1 : DinoBehaviourScript
             this.bossAttackCtrl.BossAttack2.isWorking2 = false;
         }
 
-        if (this.bossAttackCtrl.BossCtrl?.BossDamReceive != null && this.bossAttackCtrl.BossCtrl.BossDamReceive.Hp <= 30)
+        int phaseTwoThreshold = this.bossAttackCtrl.BossCtrl?.BossDamReceive != null
+            ? Mathf.Max(10, this.bossAttackCtrl.BossCtrl.BossDamReceive.HPMax / 2)
+            : 14;
+        if (this.bossAttackCtrl.BossCtrl?.BossDamReceive != null && this.bossAttackCtrl.BossCtrl.BossDamReceive.Hp <= phaseTwoThreshold)
         {
             this.isWorking1 = false;
             this.bossAttackCtrl.BossAttack2.isWorking2 = false;

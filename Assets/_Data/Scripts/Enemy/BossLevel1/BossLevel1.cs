@@ -66,15 +66,32 @@ public class BossLevel1 : MonoBehaviour
 
     private void Start()
     {
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Special")
+        bool isSpecialScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Special";
+        if (isSpecialScene)
         {
             this.contactDamage = 1;
-            this.maxHealth = 20;
-            this.currentHealth = 20;
+            this.maxHealth = 18;
+            this.currentHealth = 18;
+            this.speed = Mathf.Min(this.speed, 2.0f);
             this.timeRandomSkill = 3.5f;
-            this.bulletSpeedNormal = 12f;
-            this.bulletSpeedAround = 7f;
-            this.bulletsAroundCount = 8;
+            this.bulletSpeedNormal = 9.5f;
+            this.bulletSpeedAround = 6.0f;
+            this.bulletsAroundCount = 6;
+            this.slashDamage = Mathf.Max(this.slashDamage, 5);
+            this.arrowDamage = Mathf.Max(this.arrowDamage, 4);
+        }
+        else
+        {
+            this.contactDamage = 1;
+            this.maxHealth = Mathf.Min(this.maxHealth, 24);
+            this.currentHealth = this.maxHealth;
+            this.speed = Mathf.Min(this.speed, 2.2f);
+            this.timeRandomSkill = Mathf.Max(this.timeRandomSkill, 2.8f);
+            this.bulletSpeedNormal = Mathf.Min(this.bulletSpeedNormal, 10.5f);
+            this.bulletSpeedAround = Mathf.Min(this.bulletSpeedAround, 6.5f);
+            this.bulletsAroundCount = Mathf.Min(this.bulletsAroundCount, 8);
+            this.slashDamage = Mathf.Max(this.slashDamage, 5);
+            this.arrowDamage = Mathf.Max(this.arrowDamage, 4);
         }
         if (this.hPSlider != null)
         {

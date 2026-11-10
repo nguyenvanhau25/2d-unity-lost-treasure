@@ -12643,7 +12643,7 @@ MonoBehaviour:
   enemySpawnCtrl: {fileID: 734976785}
   delaySpawnTime: 1
   spawnTimer: 0
-  bossToUnlock: {fileID: 99073626}
+  bossToUnlock: {fileID: 0}
   bossRevealDelay: 1.5
   bossReleased: 0
 --- !u!114 &734976785
@@ -13505,7 +13505,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &793610475
 Transform:
   m_ObjectHideFlags: 0
@@ -15439,7 +15439,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!61 &1003363118
 BoxCollider2D:
   m_ObjectHideFlags: 0

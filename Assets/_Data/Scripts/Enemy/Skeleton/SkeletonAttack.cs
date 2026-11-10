@@ -5,9 +5,18 @@ using UnityEngine;
 public class SkeletonAttack : EnemyAttack
 {
     [Header("Skeleton Attack")]
-    [SerializeField] protected float skelDisAttackLimit = 10f;
+    [SerializeField] protected float skelDisAttackLimit = 8.5f;
     [SerializeField] protected float skelAttackTime = 0.5f;
-    [SerializeField] protected float skelAttackCoolDown = 2f;
+    [SerializeField] protected float skelAttackCoolDown = 2.9f;
+
+    protected override void Start()
+    {
+        base.Start();
+        this.skelDisAttackLimit = Mathf.Min(this.skelDisAttackLimit, 8.5f);
+        this.skelAttackCoolDown = Mathf.Max(this.skelAttackCoolDown, 2.9f);
+        this.disAttackLimit = this.skelDisAttackLimit;
+        this.attackCoolDown = this.skelAttackCoolDown;
+    }
     protected override void ResetValue()
     {
         base.ResetValue();

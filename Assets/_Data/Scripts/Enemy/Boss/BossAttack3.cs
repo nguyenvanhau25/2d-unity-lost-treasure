@@ -44,7 +44,8 @@ public class BossAttack3 : DinoBehaviourScript
         if (this.bossAttackCtrl?.BossCtrl?.BossDamReceive == null || this.bossAttackCtrl.BossAttack1 == null || this.bossAttackCtrl.BossAttack2 == null)
             return;
         if (this.bossAttackCtrl.BossAttack1.isWorking1 || this.bossAttackCtrl.BossAttack2.isWorking2) return;
-        if (!isWorking3 && this.bossAttackCtrl.BossCtrl.BossDamReceive.Hp <= 30 && this.collide != null && this.lineRenderer != null && this.bossAttackCtrl.BossAttack1.Player != null)
+        int phaseTwoThreshold = Mathf.Max(10, this.bossAttackCtrl.BossCtrl.BossDamReceive.HPMax / 2);
+        if (!isWorking3 && this.bossAttackCtrl.BossCtrl.BossDamReceive.Hp <= phaseTwoThreshold && this.collide != null && this.lineRenderer != null && this.bossAttackCtrl.BossAttack1.Player != null)
         {
             StartCoroutine(DoWork3());
         }
@@ -104,6 +105,7 @@ public class BossAttack3 : DinoBehaviourScript
 
         this.collide.enabled = false;
         this.attack3 = false;
+        yield return new WaitForSeconds(2.2f);
         this.isWorking3 = false;
     }
 }

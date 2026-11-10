@@ -23,7 +23,7 @@ public class RescuePrincessStory : MonoBehaviour
 
     private void Awake()
     {
-        if (SceneManager.GetActiveScene().name != "RecusePrincess") return;
+        if (!LostTreasureSceneHelper.IsCursedTemple(SceneManager.GetActiveScene().name)) return;
         foreach (SpriteRenderer renderer in GetComponentsInChildren<SpriteRenderer>(true)) renderer.enabled = false;
         foreach (Animator animator in GetComponentsInChildren<Animator>(true)) animator.enabled = false;
     }
@@ -89,7 +89,7 @@ public class RescuePrincessStory : MonoBehaviour
         yield return Show(overlay, "PHONG ẤN ĐỀN THỜ", this.abductionLine, new Color(1f, 0.35f, 0.35f));
         yield return Show(overlay, "MỤC TIÊU CUỐI CÙNG", this.objectiveLine, new Color(0.9f, 0.75f, 1f));
 
-        SceneManager.LoadScene(this.specialSceneName);
+        SceneManager.LoadScene(LostTreasureSceneHelper.ResolveLoadableSceneName(this.specialSceneName));
     }
 
     private IEnumerator Show(SceneStoryOverlay overlay, string title, string message, Color accent)

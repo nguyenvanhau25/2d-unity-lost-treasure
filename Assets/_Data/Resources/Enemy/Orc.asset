@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Orc
   m_EditorClassIdentifier: 
   enemyName: Orc
-  hpMax: 5
+  hpMax: 4
   dropList:
   - itemSO: {fileID: 11400000, guid: eaf98f46ded73d64888d575c1f48ef02, type: 2}
     dropRate: 0

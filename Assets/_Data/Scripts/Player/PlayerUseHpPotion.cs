@@ -42,7 +42,7 @@ public class PlayerUseHpPotion : PlayerAbstract
     protected void Heal()
     {
         this.OnHealingFX();
-        this.playerCtrl.PlayerDamReceive.Add(1);
+        this.playerCtrl.PlayerDamReceive.Add(8);
         this.hpPotionSO.hpPotionCount--;
     }
 

@@ -15,7 +15,7 @@ public class UIDisplay : DinoBehaviourScript
             arrowFollow.SetActive(false);
         }
     }
-    public void Open()
+    public virtual void Open()
     {
 
         gameObject.SetActive(true);
@@ -25,7 +25,7 @@ public class UIDisplay : DinoBehaviourScript
         }
     }
 
-    public void Close()
+    public virtual void Close()
     {
 
         gameObject.SetActive(false);

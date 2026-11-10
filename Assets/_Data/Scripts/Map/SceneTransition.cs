@@ -13,34 +13,43 @@ public class SceneTransition : DinoBehaviourScript
     [SerializeField] protected Inventory inventory;
     [SerializeField] protected Animator transAnim;
     protected bool isTransitioning;
-    public string DestinationSceneName => this.sceneName.ToString();
+    public string DestinationSceneName => LostTreasureSceneHelper.ResolveLoadableSceneName(this.sceneName);
 
     protected override void Start()
     {
         base.Start();
+        string activeScene = SceneManager.GetActiveScene().name;
+        if (LostTreasureSceneHelper.IsTreasureSanctum(activeScene) || LostTreasureSceneHelper.IsCursedTemple(activeScene))
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
         if (this.sceneName == SceneName.MainMenu || this.sceneName == SceneName.BeginScreen) return;
 
         GameObject marker = new GameObject("StageExitMarker");
         marker.transform.SetParent(transform, false);
         marker.transform.localPosition = Vector3.up * 2.2f;
         TextMeshPro label = marker.AddComponent<TextMeshPro>();
+        if (TMP_Settings.defaultFontAsset != null) label.font = TMP_Settings.defaultFontAsset;
         label.text = $"CỔNG SANG\n{this.GetDestinationLabel()}\nĐi vào cổng để tiếp tục";
         label.fontSize = 2.2f;
         label.alignment = TextAlignmentOptions.Center;
         label.color = new Color(1f, 0.86f, 0.42f);
+        label.sortingLayerID = SortingLayer.NameToID("Effects");
         label.sortingOrder = 30;
         marker.transform.localScale = Vector3.one * 0.55f;
     }
 
     private string GetDestinationLabel()
     {
-        switch (this.sceneName.ToString())
+        switch (this.sceneName)
         {
-            case "DarkForestScene": return "Rừng Hắc Ám";
-            case "InsideCave": return "Hang Động";
-            case "LastWar": return "Chiến Trường";
-            case "RecusePrincess": return "Đền Cổ";
-            case "Special": return "Cấm Địa";
+            case SceneName.DarkForestScene: return "Rừng Hắc Ám";
+            case SceneName.AncientCaveScene: return "Hang Động Cổ Xưa";
+            case SceneName.GuardianBattlefieldScene: return "Chiến Trường Cổ Đại";
+            case SceneName.CursedTempleScene: return "Ngôi Đền Bị Nguyền Rủa";
+            case SceneName.TreasureSanctumScene: return "Tháp Kho Báu Tối Thượng";
             default: return this.sceneName.ToString();
         }
     }
@@ -79,9 +88,31 @@ public class SceneTransition : DinoBehaviourScript
         if (this.transAnim != null) return;
         this.transAnim = GetComponentInChildren<Animator>();
     }
+    protected float lastWarningTime = -10f;
+
     protected void OnTriggerEnter2D(Collider2D other)
     {
         if (this.isTransitioning || other == null || other.GetComponentInParent<PlayerCtrl>() == null) return;
+
+        int requiredFragment = LostTreasureManager.GetCurrentSceneFragmentIndex();
+        if (requiredFragment >= 0 && LostTreasureManager.Instance != null && !LostTreasureManager.Instance.HasFragment(requiredFragment))
+        {
+            if (Time.time - this.lastWarningTime > 2.5f)
+            {
+                this.lastWarningTime = Time.time;
+                SceneStoryOverlay overlay = SceneStoryOverlay.GetOrCreate();
+                if (overlay != null)
+                {
+                    StartCoroutine(overlay.ShowMessage(
+                        "CHƯA THU THẬP MẢNH CHÌA KHÓA!",
+                        "Hãy nhặt [Mảnh Chìa Khóa Cổ Đại] phát sáng trên Bệ Đá Vàng ngay trước cổng rồi mới bước qua cổng!",
+                        2.4f,
+                        new Color(1f, 0.78f, 0.28f, 1f)));
+                }
+            }
+            return;
+        }
+
         this.isTransitioning = true;
         this.SetHp();
         this.SetPos();
@@ -94,7 +125,11 @@ public class SceneTransition : DinoBehaviourScript
     protected void SetHp()
     {
         if (this.playerHpSO != null && PlayerCtrl.Instance != null && PlayerCtrl.Instance.PlayerDamReceive != null)
-            this.playerHpSO.currentHp = PlayerCtrl.Instance.PlayerDamReceive.Hp;
+        {
+            int maxHp = Mathf.Max(this.playerHpSO.maxHp, PlayerCtrl.Instance.PlayerDamReceive.HPMax);
+            this.playerHpSO.maxHp = maxHp;
+            this.playerHpSO.currentHp = maxHp;
+        }
     }
     protected void SetPos()
     {
@@ -120,7 +155,7 @@ public class SceneTransition : DinoBehaviourScript
         this.StopPlayerMovement();
         if (this.transAnim != null) this.transAnim.SetTrigger("End");
         yield return new WaitForSeconds(1);
-        SceneManager.LoadScene(this.sceneName.ToString());
+        SceneManager.LoadScene(LostTreasureSceneHelper.ResolveLoadableSceneName(this.sceneName));
     }
     protected void StopPlayerMovement()
     {

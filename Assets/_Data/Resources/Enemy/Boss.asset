@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Boss
   m_EditorClassIdentifier: 
   enemyName: Boss
-  hpMax: 39
+  hpMax: 28
   dropList:
   - itemSO: {fileID: 11400000, guid: 2dd68985caf45724e81f091a574b8559, type: 2}
     dropRate: 0

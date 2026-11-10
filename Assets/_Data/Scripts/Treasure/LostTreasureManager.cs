@@ -204,10 +204,10 @@ public class LostTreasureManager : MonoBehaviour
     public static int GetCurrentSceneFragmentIndex()
     {
         string sceneName = SceneManager.GetActiveScene().name;
-        if (sceneName == "ForestStartScene") return 0;
-        if (sceneName == "DarkForestScene") return 1;
-        if (sceneName == "InsideCave") return 2;
-        if (sceneName == "RecusePrincess") return 3;
+        if (LostTreasureSceneHelper.IsForestStart(sceneName)) return 0;
+        if (LostTreasureSceneHelper.IsDarkForest(sceneName)) return 1;
+        if (LostTreasureSceneHelper.IsAncientCave(sceneName)) return 2;
+        if (LostTreasureSceneHelper.IsCursedTemple(sceneName)) return 3;
         return -1;
     }
 }

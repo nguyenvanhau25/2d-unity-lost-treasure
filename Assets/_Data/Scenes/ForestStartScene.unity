@@ -19323,8 +19323,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -7}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 0, y: -2}
+  m_SizeDelta: {x: 292, y: 278}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &747682434
 MonoBehaviour:
@@ -19346,20 +19346,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "M\u1EE5c ti\xEAu c\u1EE7a b\u1EA1n l\xE0 gi\u1EA3i c\u1EE9u c\xF4ng ch\xFAa
-    kh\u1ECFi n\u01A1i giam c\u1EA7m. Tuy nhi\xEAn, h\xE0nh tr\xECnh n\xE0y s\u1EBD
-    ch\u1EB3ng h\u1EC1 d\u1EC5 d\xE0ng. Con ng\u1EF1a c\u1EE7a b\u1EA1n \u0111\xE3
-    b\u1ECB th\u01B0\u01A1ng v\xE0 kh\xF4ng th\u1EC3 c\u01B0\u1EE1i \u0111\u01B0\u1EE3c
-    n\u1EEFa, bu\u1ED9c b\u1EA1n ph\u1EA3i \u0111i b\u1ED9 b\u0103ng qua khu r\u1EEBng
-    ch\u1EBFt ch\xF3c ph\xEDa tr\u01B0\u1EDBc. \u0110\xE2y l\xE0 n\u01A1i \u0111\u1EA7y
-    r\u1EABy hi\u1EC3m nguy, v\u1EDBi nh\u1EEFng c\u1EA1m b\u1EABy v\xE0 qu\xE1i
-    v\u1EADt \u0111ang r\xECnh r\u1EADp trong b\xF3ng t\u1ED1i. H\xE3y th\u1EADn
-    tr\u1ECDng v\xE0 v\u1EADn d\u1EE5ng m\u1ECDi k\u1EF9 n\u0103ng c\u1EE7a m\xECnh
-    \u0111\u1EC3 v\u01B0\u1EE3t qua th\u1EED th\xE1ch, b\u1EDFi s\u1EF1 s\u1ED1ng
-    c\xF2n c\u1EE7a c\xF4ng ch\xFAa ho\xE0n to\xE0n ph\u1EE5 thu\u1ED9c v\xE0o b\u1EA1n."
+  m_text: "BẢNG MỤC TIÊU HÀNH TRÌNH: Lần theo tấm bản đồ cổ qua các vùng đất bí ẩn để thu thập đủ 4 Mảnh Chìa Khóa Cổ Đại, ghép thành Chìa Khóa Hoàn Chỉnh và mở Rương Kho Báu Thất Lạc!"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0548de6a160ec4b40bf3466ea50f5496, type: 2}
-  m_sharedMaterial: {fileID: 2246802988454726019, guid: 0548de6a160ec4b40bf3466ea50f5496, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

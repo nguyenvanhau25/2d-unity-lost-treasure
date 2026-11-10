@@ -16,13 +16,13 @@ public class BossFallingMeteor : MonoBehaviour
     [SerializeField] private CircleCollider2D rockCollider;
 
     [Header("Timing")]
-    [SerializeField] private float fallDuration = 0.72f;
+    [SerializeField] private float fallDuration = 0.95f;
     [SerializeField] private float impactDuration = 0.34f;
     [SerializeField] private float fallHeight = 7.5f;
 
     [Header("Impact")]
-    [SerializeField] private int damage = 2;
-    [SerializeField] private float hitRadius = 0.62f;
+    [SerializeField] private int damage = 1;
+    [SerializeField] private float hitRadius = 0.5f;
     [SerializeField] private LayerMask hitMask = ~0;
 
     private MeteorState state;
@@ -36,6 +36,9 @@ public class BossFallingMeteor : MonoBehaviour
 
     private void Awake()
     {
+        this.damage = Mathf.Min(this.damage, 1);
+        this.fallDuration = Mathf.Max(this.fallDuration, 0.95f);
+        this.hitRadius = Mathf.Min(this.hitRadius, 0.52f);
         rockStartScale = rockRenderer != null ? rockRenderer.transform.localScale : Vector3.one;
         impactStartScale = impactRenderer != null ? impactRenderer.transform.localScale : Vector3.one;
         HideAllVisuals();

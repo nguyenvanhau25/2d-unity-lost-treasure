@@ -33,3 +33,5 @@ sysinfo.txt
 # Unity Version Control / Plastic SCM
 .plastic/
 ignore.conf
+
+*.md
